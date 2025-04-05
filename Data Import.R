@@ -1,8 +1,8 @@
 library(tidyverse)
+library(readxl)
 
 sind <- read_csv("table4_state-indicator.csv")
-spro <- read_csv("table2_stateprogram.csv", 
-                 col_types = cols(GEOID = col_character()))
+spro <- read_excel("table2_stateprogram redo.xlsx")
 spit <- read_csv("2024-PIT-Counts-by-State.csv")
 shic <- read_csv("2024-HIC-Counts-by-State.csv", 
                                       col_types = cols(`Total Year-Round Beds (ES, TH, SH)` = col_number(), 
@@ -83,4 +83,110 @@ shic <- read_csv("2024-HIC-Counts-by-State.csv",
                                                        `Dedicated Youth Beds (OPH)` = col_number()), 
                                       skip = 1)
 
-view(shic)
+
+# programs to look at: coc, cdbg_entitlement, elderly, grrp_comp, grrp_elements, grrp_leading, hvc, home, 
+# hud_disability, hud_esg, hud_hopwa, hud_htf, public_hsg, public_hsg_cap, s8_project
+
+# indicators to look at: GEOID, NAME, total_pop, ALAND, AWATER, percent_urban, percent_rural, percent_poc,
+# poverty_rate, pop_density, med_hh_income, employment_access_index, housing_cost_burden, overcrowded_housing,
+# vacancy_rate, homelessness, homelessness, incomplete_plumbing, incomplete_kitchen, housing_units, permits,
+# capacity_housing, hud_pbs8, hud_hcv, hud_202, hud_ph, age_under_18, age_over_64
+
+
+
+spro_cut <- spro |>
+  select(state, 
+         GEOID, 
+         coc, 
+         cdbg_entitlement, 
+         elderly, 
+         grrp_comp, 
+         grrp_elements, 
+         grrp_leading, 
+         home, 
+         hud_disability, 
+         hud_esg, 
+         hud_hopwa, 
+         hud_htf, 
+         public_hsg, 
+         public_hsg_cap, 
+         s8_project)
+
+sind_cut <- sind |>
+  select(GEOID, 
+         NAME, 
+         total_pop, 
+         ALAND, 
+         AWATER, 
+         percent_urban, 
+         percent_rural, 
+         percent_poc,
+         poverty_rate,
+         pop_density, 
+         med_hh_income, 
+         employment_access_index, 
+         housing_cost_burden, 
+         overcrowded_housing,
+         vacancy_rate, 
+         homelessness, 
+         homelessness, 
+         incomplete_plumbing, 
+         incomplete_kitchen, 
+         housing_units, 
+         permits,
+         capacity_housing, 
+         hud_pbs8, 
+         hud_hcv, 
+         hud_202, 
+         hud_ph, 
+         age_under_18, 
+         age_over_64)
+
+spit_cut <- spit |>
+  select(State,
+         `Number of CoCs`,
+         `Overall Homeless`,
+         `Overall Homeless - Under 18`,
+         `Overall Homeless - Age 18 to 24`,
+         `Overall Homeless - Age 25 to 34`,
+         `Overall Homeless - Age 35 to 44`,
+         `Overall Homeless - Age 45 to 54`,
+         `Overall Homeless - Age 55 to 64`,
+         `Overall Homeless - Over 64`,
+         `Overall Homeless - Woman`,
+         `Overall Homeless - Man`,
+         `Overall Homeless - Transgender`,
+         `Overall Homeless - Non Binary`,
+         `Overall Homeless - More Than One Gender`,
+         `Overall Homeless - Gender Questioning`,
+         `Overall Homeless - Culturally Specific Identity`,
+         `Overall Homeless - Different Identity`,
+         `Overall Homeless - Non-Hispanic/Latina/e/o`,
+         `Overall Homeless - Hispanic/Latina/e/o`,
+         `Overall Homeless - Asian or Asian American`,
+         `Overall Homeless - Black, African American, or African`,
+         `Overall Homeless - Middle Eastern or North African`,
+         `Overall Homeless - White`,
+         `Overall Homeless - Native Hawaiian or Other Pacific Islander`,
+         `Overall Homeless Veterans`,
+         `Overall Chronically Homeless`,
+         `Overall Homeless People in Families`,
+         `Overall Homeless Individuals`,
+         `Overall Homeless Unaccompanied Youth (Under 25)`,
+         `Overall Homeless Parenting Youth (Under 25)`,
+         `Sheltered Total Homeless`,
+         `Sheltered ES Homeless`,
+         `Sheltered TH Homeless`,
+         `Sheltered SH Homeless`,
+         `Unsheltered Homeless`
+         )
+
+shic_cut <- shic |>
+  select(State,
+         `Total Year-Round Beds (ES, TH, SH)`,
+         `Total Year-Round Beds (ES)...6`,
+         `Total Year-Round Beds (TH)...7`,
+         `Total Year-Round Beds (SH)...8`,
+         `Total Year-Round Beds (OPH)`,
+         `Total Year-Round Beds (PSH)`,
+         `Total Year-Round Beds (RRH)`)
