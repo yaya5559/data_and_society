@@ -112,6 +112,7 @@ spro_cut <- spro |>
          public_hsg_cap, 
          s8_project)
 
+
 sind_cut <- sind |>
   select(GEOID, 
          NAME, 
@@ -127,9 +128,7 @@ sind_cut <- sind |>
          employment_access_index, 
          housing_cost_burden, 
          overcrowded_housing,
-         vacancy_rate, 
-         homelessness, 
-         homelessness, 
+         vacancy_rate,
          incomplete_plumbing, 
          incomplete_kitchen, 
          housing_units, 
@@ -141,6 +140,8 @@ sind_cut <- sind |>
          hud_ph, 
          age_under_18, 
          age_over_64)
+
+sind_cut$GEOID <- as.numeric(sind_cut$GEOID)
 
 spit_cut <- spit |>
   select(State,
@@ -190,3 +191,33 @@ shic_cut <- shic |>
          `Total Year-Round Beds (OPH)`,
          `Total Year-Round Beds (PSH)`,
          `Total Year-Round Beds (RRH)`)
+
+
+
+nohome <- shic_cut |>
+  left_join(spit_cut, by=c("State" = "State")) |>
+  arrange(State)
+
+program <- spro_cut |>
+  left_join(sind_cut, by=c("GEOID" = "GEOID"))
+
+sdat <- program |>
+  left_join(nohome, by=c("state" = "State"))
+
+sdat <- mutate(sdat,
+               funding_tot = coc + 
+                 cdbg_entitlement +
+                 elderly +
+                 grrp_comp +
+                 grrp_elements +
+                 grrp_leading +
+                 home +
+                 hud_disability +
+                 hud_esg +
+                 hud_hopwa +
+                 hud_htf +
+                 public_hsg +
+                 public_hsg_cap +
+                 s8_project)
+
+write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
