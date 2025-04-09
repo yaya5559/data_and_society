@@ -1,0 +1,56 @@
+---
+title: "Lab Name"
+author: "Author Name"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+states <-read_csv("state_data.csv")
+library(usmap)
+```
+
+### Exercise 1
+
+Insert any text here.
+
+```{r code-chunk-label}
+colnames(states)
+```
+
+### Exercise 2
+```{r}
+states_clean <- states |>
+  rename(
+    homeless = `Overall Homeless`,
+    population = total_pop
+  )
+```
+
+
+### Ex 3
+```{r}
+plot_usmap(data = states_clean, values = "homeless", regions = "states") +
+  scale_fill_continuous(name = "Homeless Population", label = scales::comma) +
+  labs(title = "Homeless Population by State") +
+  theme(legend.position = "right")
+
+```
+
+
+### Ex 4
+```{r}
+states_clean <- states_clean %>%
+  mutate(homeless_rate = homeless / population)
+
+plot_usmap(data = states_clean, values = "homeless_rate", regions = "states") +
+  scale_fill_continuous(name = "Homeless Rate", label = scales::percent) +
+  labs(title = "Homeless Rate by State") +
+  theme(legend.position = "right")
+
+```
+
+...
+
