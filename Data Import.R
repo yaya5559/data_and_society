@@ -1,5 +1,9 @@
 library(tidyverse)
 library(readxl)
+library(sf)
+library(mapview)
+library(broom)
+library(rgeos)
 
 sind <- read_csv("table4_state-indicator.csv")
 spro <- read_excel("table2_stateprogram redo.xlsx")
@@ -92,6 +96,23 @@ shic <- read_csv("2024-HIC-Counts-by-State.csv",
 # vacancy_rate, homelessness, homelessness, incomplete_plumbing, incomplete_kitchen, housing_units, permits,
 # capacity_housing, hud_pbs8, hud_hcv, hud_202, hud_ph, age_under_18, age_over_64
 
+spro_names <- c('state', 
+                'GEOID', 
+                'coc', 
+                'cdbg_entitlement', 
+                'elderly', 
+                'grrp_comp', 
+                'grrp_elements', 
+                'grrp_leading', 
+                'home', 
+                'hcv',
+                'hud_disability', 
+                'hud_esg', 
+                'hud_hopwa', 
+                'hud_htf', 
+                'public_hsg', 
+                'public_hsg_cap', 
+                's8_project')
 
 
 spro_cut <- spro |>
@@ -232,7 +253,8 @@ write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
 
 
 cind <- read_csv("table3_county-indicator.csv")
-cpro <- read_csv("table1_countyprogram.csv")
+cpro <- read_csv("table1_countyprogram.csv", 
+                 col_types = cols(GEOID = col_character()))
 cpit <- read_csv("2024-PIT-Counts-by-CoC.csv")
 chic <- read_csv("2024-HIC-Counts-by-CoC.csv", 
                  col_types = cols(`Total Year-Round Beds (ES, TH, SH)` = col_number(), 
@@ -342,6 +364,14 @@ cpro_cut <- cpro |>
          public_hsg_cap, 
          s8_project)
 
+cpro_cut <- cpro_cut |>
+  mutate(GEOID = case_when(
+    str_length(GEOID) < 5 ~ paste("0", GEOID, sep = "")
+  ))
+
+cpro_cut$GEOID <- as.character(cind_cut$GEOID)
+
+
 
 cind_cut <- cind |>
   select(GEOID, 
@@ -373,7 +403,8 @@ cind_cut <- cind |>
          age_under_18, 
          age_over_64)
 
-cind_cut$GEOID <- as.numeric(cind_cut$GEOID)
+cind_cut$GEOID <- as.character(cind_cut$GEOID)
+
 
 cpit_cut <- cpit |>
   select(`CoC Number`,
@@ -432,12 +463,47 @@ nohome2 <- cpit_cut |>
   left_join(chic_cut, by=c("CoC Number" = "CoC Number")) |>
   arrange(`CoC Number`)
 
+nohome2 <- nohome2[-c(1, 2, 388, 389, 390), ]
+
+nohome2$`CoC Number`[209] <- "MO-604"
+nohome2$`CoC Name`[209] <- "Kansas City (MO&KS), Independence, Lees Summit/Jackson,
+Wyandotte Counties CoC"
+nohome2$`CoC Name`[25] <- "Contra Costa County CoC"
+nohome2$`CoC Name`[32] <- "Daly City/San Mateo County CoC"
+nohome2$`CoC Name`[35] <- "Roseville, Rocklin/Placer County CoC"
+nohome2$`CoC Name`[36] <- "Redding/Shasta, Siskiyou, Lassen, Plumas, Del Norte, Modoc, Sierra Counties CoC"
+nohome2$`CoC Name`[75] <- "Lakeland/Polk County CoC"
+nohome2$`CoC Name`[94] <- "Charlotte County CoC"
+nohome2$`CoC Name`[117] <- "Rockford/DeKalb, Winnebago, Boone Counties CoC"
+nohome2$`CoC Name`[144] <- "Lafayette/Acadiana Regional CoC"
+nohome2$`CoC Name`[196] <- "Dakota, Anoka, Washington, Scott, Carver Counties CoC"
+nohome2$`CoC Name`[201] <- "Duluth/St. Louis County CoC"
+nohome2$`CoC Name`[205] <- "St. Charles, Lincoln, Warren Counties CoC"
+nohome2$`CoC Name`[314] <- "Bristol, Bensalem/Bucks County CoC"
+nohome2$`CoC Name`[316] <- "Pittsburgh, McKeesport, Penn Hills/Allegheny County CoC"
+nohome2$`CoC Name`[324] <- "Greenville, Anderson, Spartanburg/Upstate CoC"
+nohome2$`CoC Name`[326] <- "Sumter City & County CoC"
+nohome2$`CoC Name`[333] <- "Upper Cumberland CoC"
+nohome2$`CoC Name`[340] <- "Dallas City & County, Irving CoC"
+nohome2$`CoC Name`[341] <- "Fort Worth, Arlington/Tarrant County CoC"
+nohome2$`CoC Name`[344] <- "Texas Balance of State CoC"
+nohome2$`CoC Name`[347] <- "Houston, Pasadena, Conroe/Harris, Fort Bend, Montgomery Counties CoC"
+nohome2$`CoC Name`[348] <- "Bryan, College Station/Brazos Valley CoC"
+nohome2$`CoC Name`[]
+
+
+
+
+
+
 program2 <- cind_cut |>
   left_join(cpro_cut, by=c("GEOID" = "GEOID")) |>
   arrange(state.y, NAME)
 
-cdat <- nohome2 |>
-  left_join(program2, by=c("state" = "State"))
+program2$GEOID <- as.character(program2$GEOID)
+
+
+
 
 cdat <- mutate(cdat,
                funding_tot = coc + 
@@ -455,7 +521,36 @@ cdat <- mutate(cdat,
                  public_hsg_cap +
                  s8_project)
 
-write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
+
+
+
+### I FINALLY have the goddamned CoC to County table. Working on merging the data here.
+
+cnt_to_coc <- read_csv("County-to-CoC.csv")
+
+cnt_to_coc <- cnt_to_coc |>
+  rename(geoCode = GEOID)
+
+
+cnt_to_coc <- cnt_to_coc |>
+  separate(`CoC Name`, c("coc_num", "coc_name"), sep = " - ")
+
+cnt_to_coc <- cnt_to_coc |>
+  select(coc_num, geoCode, coc_name, `County Name`)
+
+a <- cnt_to_coc |>
+  left_join(nohome2, by=c("coc_num" = "CoC Number")) |>
+  arrange(geoCode)
+
+a$geoCode <- as.character(a$geoCode)
+
+
+
+###Chopping things up by state to sort counties so I can match with cnt-to-coc
+
+
+a <- a |>
+  mutate(state  = str_extract(coc_num, "[A-Z]{1,2}"))
 
 
 
@@ -463,87 +558,52 @@ write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
 
 
 
-program2 <- program2$`CoC Number` = c("AK-501",
-                                      "AK-501",
-                                      "AK-500",
-                                      ,
-                                      )
+b <- a |>
+  right_join(program2, by = c("state" = "state.y", "County Name" = "county"))
 
 
-program3 <- within(
-  program2, {
-    `CoC Number` <- as.character(
-      ifelse(state.y %in% "AK" & GEOID == 2020, "AK-500",
-        ifelse(state.y %in% "AK", "AK-501",
-        ifelse(state.y %in% "AL" & GEOID == 1073 | GEOID == 1115 | GEOID == 1117, "AL-500", NA))))
-  }
-  )
+
+
+
+
+
   
-    
-    
-### Examples of what I want to do
 
-bostoncrimes_zips <- within(
-  bostomcrimes_zips, {
-    SEASON <- as.factor(
-      ifelse(MONTH %in% c(12, 1, 2), 'Winter', 
-             ifelse(MONTH %in% c(3, 4, 5), 'Spring', 
-                    ifelse(MONTH %in% c(6, 7, 8), 'Summer', 
-                           ifelse(MONTH %in% c(9, 10, 11), 'Fall', NA) 
-                    )
-             )
-      )
-    )
-  })
+
+
+
+
   
   us_county_v2 <- us_county |>
   mutate(county = str_replace(county, " County", ""),
          county = str_replace(county, " Bourough", ""),
          county = str_replace(county, " city", ""),
          county = str_replace(county, " Parish", ""))
-  
-  
-  
-  
-### Importing FIPS codes
-  
-geocodes <- read_excel("all-geocodes-v2020.xlsx", 
-                                   skip = 4)
-
-geocodes <- geocodes |> 
-  rename(state_fip = `State Code (FIPS)`) |>
-  rename(county_fip = `County Code (FIPS)`) |>
-  rename(area = `Area Name (including legal/statistical area description)`) |>
-  mutate(full_fip = paste(state_fip, county_fip, sep = ""))
-
-geo_short <- geocodes |>
-  filter(`Summary Level` == "050")
-
-geocodes <- geocodes |>
-  mutate(area = str_replace(area, " County", ""),
-         area = str_replace(area, " Borough", ""),
-         area = str_replace(area, " city", ""),
-         area = str_replace(area, " Parish", ""),
-         area = str_replace(area, " Census Area", "")
-  )
 
 
 
 
+### Pulling the shapefiles
+
+GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
+
+GIS |>
+ggplot() +
+  geom_sf()
+
+slim_GIS |>
+  ggplot() +
+    geom_sf()
+
+
+# Need to turn this off for simplify and on when plotting map
+sf_use_s2(TRUE)
+
+slim_GIS <- st_simplify(GIS, preserveTopology = FALSE, dTolerance = 1000)
 
 
 
-
-
-prog_4_fips <- program3 |>
-  mutate(county = str_replace(county, " County", ""),
-         county = str_replace(county, " Borough", ""),
-         county = str_replace(county, " city", ""),
-         county = str_replace(county, " Parish", ""),
-         county = str_replace(county, " Census Area", "")
-         )
-
-program4 <- program3 |>
-  left_join(geo_short, by=c("county" = "area"))
-
-sum(!is.na(us_county_burden$Overall_Burden_Rate_18))
+### Notes:
+# Regional access point <- look this up (something to do with coordinated entry)
+# Balance of state CoC is managed by department of commerce for each state
+# 
