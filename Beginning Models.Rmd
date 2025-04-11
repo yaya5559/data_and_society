@@ -7,22 +7,55 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 ## R Markdown
-
-
 
 ```{r load data}
 state_data <- read.csv("state_data.csv")
 ```
 
-## Including Plots
+## Creating total funding variable 
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r state funding variable, echo=FALSE}
+state_data <- mutate(state_data,
+                     funding_total = coc +
+                       cdbg_entitlement +
+                       elderly +
+                       grrp_comp +
+                       grrp_elements +
+                       grrp_leading +
+                       home + 
+                       hud_disability +
+                       hud_esg +
+                       hud_hopwa +
+                       hud_htf + 
+                       public_hsg +
+                       public_hsg_cap + 
+                       s8_project
+                    )
 ```
+
+```{r view column names}
+colnames(state_data)
+```
+
+```{r}
+states_clean <- state_data |>
+  rename(
+    homeless = `Overall Homeless`
+  )
+states_clean
+```
+
+
+## Building models
+```{r model 1}
+model1 <- lm(homeless ~ funding_total, data = states_clean)
+summary(model1) 
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
