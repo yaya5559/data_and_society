@@ -22,7 +22,7 @@ AK-501 - Alaska Balance of State CoC,29180,Nome Census Area,5909
 AK-501 - Alaska Balance of State CoC,29185,North Slope Borough,5703
 AK-501 - Alaska Balance of State CoC,29188,Northwest Arctic Borough,331
 AK-501 - Alaska Balance of State CoC,29195,Petersburg Borough,19473
-AK-501 - Alaska Balance of State CoC,29198,Prince of Wales-Hyder Census Area,
+AK-501 - Alaska Balance of State CoC,29198,Prince of Wales-Hyder Census Area,
 AK-501 - Alaska Balance of State CoC,29220,Sitka City and Borough,15356
 AK-501 - Alaska Balance of State CoC,29230,Skagway Municipality,5757
 AK-501 - Alaska Balance of State CoC,29240,Southeast Fairbanks Census Area,8217
@@ -31,11 +31,11 @@ AK-501 - Alaska Balance of State CoC,29275,Wrangell City and Borough,8308
 AK-501 - Alaska Balance of State CoC,29282,Yakutat City and Borough,1249
 AK-501 - Alaska Balance of State CoC,29290,Yukon-Koyukuk Census Area,5910
 "AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",10216,Bessemer,233133
-"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Calhoun County,
-"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Cherokee County,
+"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Calhoun County,
+"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Cherokee County,
 "AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",10228,Birmingham,5990664
-"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,DeKalb County,
-"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Etowah County,
+"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,DeKalb County,
+"AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",,Etowah County,
 "AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",19073,Jefferson County,2484281
 "AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",19117,Shelby County,335582
 "AL-500 - Birmingham/Jefferson, St. Clair, Shelby Counties CoC",19115,St. Clair County,203858
@@ -100,7 +100,7 @@ AL-507 - Alabama Balance of State CoC,11740,Opelika,107876
 AL-507 - Alabama Balance of State CoC,19105,Perry County,36824
 AL-507 - Alabama Balance of State CoC,19107,Pickens County,63090
 AL-507 - Alabama Balance of State CoC,19109,Pike County,119717
-AL-507 - Alabama Balance of State CoC,,Russell County,
+AL-507 - Alabama Balance of State CoC,,Russell County,
 AL-507 - Alabama Balance of State CoC,19111,Randolph County,96494
 AL-507 - Alabama Balance of State CoC,19119,Sumter County,48665
 AL-507 - Alabama Balance of State CoC,19121,Talladega County,287202
@@ -241,7 +241,7 @@ CA-500 - San Jose/Santa Clara City & County CoC,63354,Santa Clara,385501
 CA-500 - San Jose/Santa Clara City & County CoC,69085,Santa Clara County,1505388
 CA-500 - San Jose/Santa Clara City & County CoC,63660,Sunnyvale,393005
 CA-501 - San Francisco CoC,63228,San Francisco,19104299
-CA-501 - San Francisco CoC,,San Francisco County,
+CA-501 - San Francisco CoC,,San Francisco County,
 "CA-502 - Oakland, Berkeley/Alameda County CoC",60012,Alameda,418724
 "CA-502 - Oakland, Berkeley/Alameda County CoC",69001,Alameda County,2262064
 "CA-502 - Oakland, Berkeley/Alameda County CoC",60324,Berkeley,2750092
@@ -467,7 +467,7 @@ CO-500 - Colorado Balance of State CoC,89003,Alamosa County,61840
 CO-500 - Colorado Balance of State CoC,89007,Archuleta County,32119
 CO-500 - Colorado Balance of State CoC,89009,Baca County,15020
 CO-500 - Colorado Balance of State CoC,89011,Bent County,26470
-CO-500 - Colorado Balance of State CoC,,Broomfield County,
+CO-500 - Colorado Balance of State CoC,,Broomfield County,
 CO-500 - Colorado Balance of State CoC,89015,Chaffee County,67734
 CO-500 - Colorado Balance of State CoC,89017,Cheyenne County,7335
 CO-500 - Colorado Balance of State CoC,89019,Clear Creek County,39945
@@ -531,7 +531,7 @@ CO-503 - Metropolitan Denver CoC,80228,Castle Rock,95285
 CO-503 - Metropolitan Denver CoC,80238,Centennial,123621
 CO-503 - Metropolitan Denver CoC,80300,Commerce City,142949
 CO-503 - Metropolitan Denver CoC,80390,Denver,6502416
-CO-503 - Metropolitan Denver CoC,,Denver County,
+CO-503 - Metropolitan Denver CoC,,Denver County,
 CO-503 - Metropolitan Denver CoC,89035,Douglas County,318788
 CO-503 - Metropolitan Denver CoC,89059,Jefferson County,391291
 CO-503 - Metropolitan Denver CoC,80906,Lakewood,338688
@@ -549,20 +549,20 @@ CO-504 - Colorado Springs/El Paso County CoC,89041,El Paso County,413457
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",90258,Danbury,217551
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",90390,Fairfield,183454
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",99001,Fairfield County,614671
-"CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",,Greater Bridgeport Planning Region,
-"CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",,Western Connecticut Planning Region,
+"CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",,Greater Bridgeport Planning Region,
+"CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",,Western Connecticut Planning Region,
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",90438,Greenwich,277834
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",90810,Norwalk,314333
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",91074,Stamford,356851
 "CT-503 - Bridgeport, Stamford, Norwalk, Danbury/Fairfield County CoC",91104,Stratford,234127
 CT-505 - Connecticut Balance of State CoC,90114,Bristol,219182
-CT-505 - Connecticut Balance of State CoC,,Capitol Planning Region,
-CT-505 - Connecticut Balance of State CoC,,Lower Connecticut River Valley Planning Region,
-CT-505 - Connecticut Balance of State CoC,,Naugatuck Valley Planning Region,
-CT-505 - Connecticut Balance of State CoC,,Northeastern Connecticut Planning Region,
-CT-505 - Connecticut Balance of State CoC,,Northwest Hills Planning Region,
-CT-505 - Connecticut Balance of State CoC,,South Central Connecticut Planning Region,
-CT-505 - Connecticut Balance of State CoC,,Southeastern Connecticut Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Capitol Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Lower Connecticut River Valley Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Naugatuck Valley Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Northeastern Connecticut Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Northwest Hills Planning Region,
+CT-505 - Connecticut Balance of State CoC,,South Central Connecticut Planning Region,
+CT-505 - Connecticut Balance of State CoC,,Southeastern Connecticut Planning Region,
 CT-505 - Connecticut Balance of State CoC,90336,East Hartford,211364
 CT-505 - Connecticut Balance of State CoC,90480,Hamden Town,166874
 CT-505 - Connecticut Balance of State CoC,90492,Hartford,3715450
@@ -585,7 +585,7 @@ CT-505 - Connecticut Balance of State CoC,91230,West Hartford,371224
 CT-505 - Connecticut Balance of State CoC,91236,West Haven,250695
 CT-505 - Connecticut Balance of State CoC,99015,Windham County,483321
 DC-500 - District of Columbia CoC,110006,District Of Columbia,15646234
-DC-500 - District of Columbia CoC,,District of Columbia,
+DC-500 - District of Columbia CoC,,District of Columbia,
 DE-500 - Delaware Statewide CoC,100090,Dover,119862
 DE-500 - Delaware Statewide CoC,109001,Kent County,356635
 DE-500 - Delaware Statewide CoC,109003,New Castle County,2420501
@@ -730,7 +730,7 @@ GA-501 - Georgia Balance of State CoC,139013,Barrow County,193033
 GA-501 - Georgia Balance of State CoC,139015,Bartow County,270527
 GA-501 - Georgia Balance of State CoC,139017,Ben Hill County,80316
 GA-501 - Georgia Balance of State CoC,139019,Berrien County,71281
-GA-501 - Georgia Balance of State CoC,,Bibb County,
+GA-501 - Georgia Balance of State CoC,,Bibb County,
 GA-501 - Georgia Balance of State CoC,139023,Bleckley County,38666
 GA-501 - Georgia Balance of State CoC,139025,Brantley County,53995
 GA-501 - Georgia Balance of State CoC,139027,Brooks County,63534
@@ -885,11 +885,11 @@ GA-502 - Fulton County CoC,132832,Roswell,164727
 GA-502 - Fulton County CoC,132890,Sandy Springs City,196953
 GA-502 - Fulton County CoC,133020,South Fulton,176952
 GA-503 - Athens-Clarke County CoC,130168,Athens-Clarke County,454889
-GA-503 - Athens-Clarke County CoC,,Clarke County,
-GA-504 - Augusta-Richmond County CoC,,Richmond County,
+GA-503 - Athens-Clarke County CoC,,Clarke County,
+GA-504 - Augusta-Richmond County CoC,,Richmond County,
 GA-504 - Augusta-Richmond County CoC,130192,Augusta-Richmond County,1807599
 GA-505 - Columbus-Muscogee CoC,130750,Columbus-Muscogee County,1686486
-GA-505 - Columbus-Muscogee CoC,,Muscogee County,
+GA-505 - Columbus-Muscogee CoC,,Muscogee County,
 GA-505 - Columbus-Muscogee CoC,19113,Russell County,187341
 GA-506 - Marietta/Cobb County CoC,139067,Cobb County,3111347
 GA-506 - Marietta/Cobb County CoC,131998,Marietta,164645
@@ -901,9 +901,9 @@ GA-508 - DeKalb County CoC,139089,DeKalb County,4608527
 GU-500 - Guam CoC,660001,Guam,2131072
 HI-500 - Hawaii Balance of State CoC,159001,Hawaii County,962846
 HI-500 - Hawaii Balance of State CoC,159007,Kauai County,272824
-HI-500 - Hawaii Balance of State CoC,,Kalawao County,
+HI-500 - Hawaii Balance of State CoC,,Kalawao County,
 HI-500 - Hawaii Balance of State CoC,159009,Maui County,703157
-HI-501 - Honolulu City and County CoC,,Honolulu County,
+HI-501 - Honolulu City and County CoC,,Honolulu County,
 HI-501 - Honolulu City and County CoC,150144,Honolulu,7954532
 "IA-500 - Sioux City/Dakota, Woodbury Counties CoC",319043,Dakota County,120718
 "IA-500 - Sioux City/Dakota, Woodbury Counties CoC",194812,Sioux City,1635939
@@ -1563,9 +1563,9 @@ KY-500 - Kentucky Balance of State CoC,219233,Webster County,57663
 KY-500 - Kentucky Balance of State CoC,219235,Whitley County,127800
 KY-500 - Kentucky Balance of State CoC,219237,Wolfe County,45735
 KY-500 - Kentucky Balance of State CoC,219239,Woodford County,78298
-KY-501 - Louisville-Jefferson County CoC,,Jefferson County,
+KY-501 - Louisville-Jefferson County CoC,,Jefferson County,
 KY-501 - Louisville-Jefferson County CoC,211374,Louisville-CDBG,11151450
-KY-502 - Lexington-Fayette County CoC,,Fayette County,
+KY-502 - Lexington-Fayette County CoC,,Fayette County,
 KY-502 - Lexington-Fayette County CoC,211314,Lexington-Fayette,2377706
 LA-500 - Lafayette/Acadiana Regional CoC,229001,Acadia Parish,255688
 LA-500 - Lafayette/Acadiana Regional CoC,229039,Evangeline Parish,138892
@@ -1587,7 +1587,7 @@ LA-500 - Lafayette/Acadiana Regional CoC,229113,Vermilion Parish,305399
 "LA-502 - Shreveport, Bossier/Northwest Louisiana CoC",229119,Webster Parish,158197
 LA-503 - New Orleans/Jefferson Parish CoC,229051,Jefferson Parish,2624475
 LA-503 - New Orleans/Jefferson Parish CoC,220924,Kenner,216720
-LA-503 - New Orleans/Jefferson Parish CoC,,Orleans Parish,
+LA-503 - New Orleans/Jefferson Parish CoC,,Orleans Parish,
 LA-503 - New Orleans/Jefferson Parish CoC,221296,New Orleans,13083720
 LA-505 - Monroe/Northeast Louisiana CoC,229021,Caldwell Parish,47245
 LA-505 - Monroe/Northeast Louisiana CoC,229035,East Carroll Parish,31666
@@ -1621,7 +1621,7 @@ LA-509 - Louisiana Balance of State CoC,229003,Allen Parish,88036
 LA-509 - Louisiana Balance of State CoC,229005,Ascension Parish,280881
 LA-509 - Louisiana Balance of State CoC,229007,Assumption Parish,83491
 LA-509 - Louisiana Balance of State CoC,220126,Baton Rouge,3243342
-LA-509 - Louisiana Balance of State CoC,,Terrebonne Parish,
+LA-509 - Louisiana Balance of State CoC,,Terrebonne Parish,
 LA-509 - Louisiana Balance of State CoC,229011,Beauregard Parish,94730
 LA-509 - Louisiana Balance of State CoC,229019,Calcasieu Parish,366318
 LA-509 - Louisiana Balance of State CoC,229023,Cameron Parish,21566
@@ -1692,10 +1692,10 @@ MA-516 - Massachusetts Balance of State CoC,252250,Somerville,2578566
 MA-516 - Massachusetts Balance of State CoC,259025,Suffolk County,559397
 MA-516 - Massachusetts Balance of State CoC,252544,Waltham,315398
 "MA-519 - Attleboro, Taunton/Bristol County CoC",250126,Attleboro,140660
-"MA-519 - Attleboro, Taunton/Bristol County CoC",,Bristol County,
+"MA-519 - Attleboro, Taunton/Bristol County CoC",,,
 "MA-519 - Attleboro, Taunton/Bristol County CoC",259005,Bristol County,760614
 "MA-519 - Attleboro, Taunton/Bristol County CoC",252418,Taunton,313564
-MD-501 - Baltimore CoC,,Baltimore city,
+MD-501 - Baltimore CoC,,Baltimore city,
 MD-501 - Baltimore CoC,240066,Baltimore,21559371
 MD-503 - Annapolis/Anne Arundel County CoC,240036,Annapolis,114286
 MD-503 - Annapolis/Anne Arundel County CoC,249003,Anne Arundel County,2149379
@@ -1901,7 +1901,7 @@ MN-502 - Rochester/Southeast Minnesota CoC,279165,Watonwan County,50695
 MN-502 - Rochester/Southeast Minnesota CoC,279169,Winona County,199500
 "MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",279003,Anoka County,573650
 "MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",279019,Carver County,157577
-"MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",,Dakota County,
+"MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",,Dakota County,
 "MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",279037,Dakota County,1992622
 "MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",279139,Scott County,358754
 "MN-503 - Dakota, Anoka, Washington, Scott, Carver Counties CoC",279163,Washington County,250192
@@ -1971,7 +1971,7 @@ MN-511 - Southwest Minnesota CoC,279151,Swift County,39401
 MN-511 - Southwest Minnesota CoC,279173,Yellow Medicine County,42979
 MO-500 - St. Louis County CoC,291806,Florissant,99351
 MO-500 - St. Louis County CoC,299189,St. Louis County,5757847
-MO-501 - St. Louis City CoC,,St. Louis city,
+MO-501 - St. Louis City CoC,,St. Louis city,
 MO-501 - St. Louis City CoC,294626,St Louis,18380899
 "MO-503 - St. Charles, Lincoln, Warren Counties CoC",299113,Lincoln County,119828
 "MO-503 - St. Charles, Lincoln, Warren Counties CoC",293852,O'Fallon,119213
@@ -1995,7 +1995,7 @@ Wyandotte Counties CoC",292562,Independence,317198
 "MO-604 - Kansas City (MO&KS), Independence, Lees Summit/Jackson,
 Wyandotte Counties CoC",299095,Jackson County,238347
 "MO-604 - Kansas City (MO&KS), Independence, Lees Summit/Jackson,
-Wyandotte Counties CoC",,Wyandotte County,
+Wyandotte Counties CoC",,Wyandotte County,
 "MO-604 - Kansas City (MO&KS), Independence, Lees Summit/Jackson,
 Wyandotte Counties CoC",201776,Kansas City,2307922
 "MO-604 - Kansas City (MO&KS), Independence, Lees Summit/Jackson,
@@ -2531,7 +2531,7 @@ NE-500 - Nebraska Balance of State CoC,319185,York County,53905
 "NE-501 - Omaha, Council Bluffs CoC",191134,Council Bluffs,362664
 "NE-501 - Omaha, Council Bluffs CoC",319055,Douglas County,179434
 "NE-501 - Omaha, Council Bluffs CoC",312208,Omaha,4274231
-"NE-501 - Omaha, Council Bluffs CoC",,Pottawattamie County,
+"NE-501 - Omaha, Council Bluffs CoC",,,
 "NE-501 - Omaha, Council Bluffs CoC",199155,Pottawattamie County,99751
 "NE-501 - Omaha, Council Bluffs CoC",319153,Sarpy County,255522
 NE-502 - Lincoln CoC,311710,Lincoln,1896442
@@ -2799,11 +2799,11 @@ NY-525 - New York Balance of State CoC,369057,Montgomery County,345736
 NY-525 - New York Balance of State CoC,369079,Putnam County,342515
 NY-525 - New York Balance of State CoC,369095,Schoharie County,168058
 NY-525 - New York Balance of State CoC,369105,Sullivan County,435891
-NY-600 - New York City CoC,,Kings County,
-NY-600 - New York City CoC,,Bronx County,
-NY-600 - New York City CoC,,New York County,
-NY-600 - New York City CoC,,Queens County,
-NY-600 - New York City CoC,,Richmond County,
+NY-600 - New York City CoC,,Kings County,
+NY-600 - New York City CoC,,Bronx County,
+NY-600 - New York City CoC,,New York County,
+NY-600 - New York City CoC,,Queens County,
+NY-600 - New York City CoC,,Richmond County,
 NY-600 - New York City CoC,364436,New York,171858713
 NY-601 - Poughkeepsie/Dutchess County CoC,369027,Dutchess County,583395
 NY-601 - Poughkeepsie/Dutchess County CoC,365312,Poughkeepsie,307468
@@ -2995,8 +2995,8 @@ OK-505 - Northeast Oklahoma CoC,409145,Wagoner County,124250
 OK-505 - Northeast Oklahoma CoC,409147,Washington County,95244
 OK-506 - Southwest Oklahoma Regional CoC,409009,Beckham County,51327
 OK-506 - Southwest Oklahoma Regional CoC,409015,Caddo County,69171
-OK-506 - Southwest Oklahoma Regional CoC,,McClain County,
-OK-506 - Southwest Oklahoma Regional CoC,,Washita County,
+OK-506 - Southwest Oklahoma Regional CoC,,McClain County,
+OK-506 - Southwest Oklahoma Regional CoC,,Washita County,
 OK-506 - Southwest Oklahoma Regional CoC,409031,Comanche County,32661
 OK-506 - Southwest Oklahoma Regional CoC,409033,Cotton County,17582
 OK-506 - Southwest Oklahoma Regional CoC,409049,Garvin County,46551
@@ -3433,7 +3433,7 @@ TN-503 - Central Tennessee CoC,479165,Sumner County,435739
 TN-503 - Central Tennessee CoC,479169,Trousdale County,21523
 TN-503 - Central Tennessee CoC,479181,Wayne County,48493
 TN-503 - Central Tennessee CoC,479187,Williamson County,183814
-TN-504 - Nashville-Davidson County CoC,,Davidson County,
+TN-504 - Nashville-Davidson County CoC,,Davidson County,
 TN-504 - Nashville-Davidson County CoC,471368,Nashville-Davidson,5000124
 TN-506 - Upper Cumberland CoC,479015,Cannon County,46694
 TN-506 - Upper Cumberland CoC,479027,Clay County,37956
@@ -3924,7 +3924,7 @@ VA-508 - Lynchburg CoC,519019,Bedford County,151991
 VA-508 - Lynchburg CoC,519031,Campbell County,106143
 VA-508 - Lynchburg CoC,510960,Lynchburg city,264133
 "VA-513 - Harrisonburg, Winchester/Western Virginia CoC",519043,Clarke County,44215
-"VA-513 - Harrisonburg, Winchester/Western Virginia CoC",,Fredericksburg city,
+"VA-513 - Harrisonburg, Winchester/Western Virginia CoC",,Fredericksburg city,
 "VA-513 - Harrisonburg, Winchester/Western Virginia CoC",519069,Frederick County,131761
 "VA-513 - Harrisonburg, Winchester/Western Virginia CoC",510726,Harrisonburg city,188901
 "VA-513 - Harrisonburg, Winchester/Western Virginia CoC",519139,Page County,95750
@@ -4011,13 +4011,13 @@ VA-521 - Virginia Balance of State CoC,519193,Westmoreland County,47097
 VA-521 - Virginia Balance of State CoC,519195,Wise County,108370
 VA-521 - Virginia Balance of State CoC,519197,Wythe County,86215
 VA-600 - Arlington County CoC,519013,Arlington County,1361822
-VA-601 - Fairfax County CoC,,Falls Church city,
-VA-601 - Fairfax County CoC,,Fairfax city,
+VA-601 - Fairfax County CoC,,Falls Church city,
+VA-601 - Fairfax County CoC,,Fairfax city,
 VA-601 - Fairfax County CoC,519059,Fairfax County,5771748
 VA-602 - Loudoun County CoC,519107,Loudoun County,523656
 VA-603 - Alexandria CoC,510024,Alexandria city,407833
-VA-604 - Prince William County CoC,,Manassas city,
-VA-604 - Prince William County CoC,,Manassas Park city,
+VA-604 - Prince William County CoC,,Manassas city,
+VA-604 - Prince William County CoC,,Manassas Park city,
 VA-604 - Prince William County CoC,519153,Prince William County,2638008
 VI-500 - Virgin Islands CoC,780001,Virgin Islands,1207223
 VT-500 - Vermont Balance of State CoC,509001,Addison County,141667
