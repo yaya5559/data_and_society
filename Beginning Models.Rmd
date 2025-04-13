@@ -57,5 +57,18 @@ model1 <- lm(homeless ~ funding_total, data = states_clean)
 summary(model1) 
 ```
 
+```{r residuals plot}
+plot(model1$fitted.values, model1$residuals,
+     xlab = "Fitted Values",
+     ylab = "Residuals",
+     main = "Residuals vs Fitted")
+
+abline(h = 0, col = "red", lty = 2)
+```
+
+```{r confidence intervals}
+predict(model1, interval = "confidence")
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
