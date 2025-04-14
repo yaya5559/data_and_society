@@ -51,7 +51,8 @@ states_clean
 ```
 
 
-## Building models
+## Building models for States 
+
 ```{r model 1}
 model1 <- lm(homeless ~ funding_total, data = states_clean)
 summary(model1) 
@@ -68,6 +69,38 @@ abline(h = 0, col = "red", lty = 2)
 
 ```{r confidence intervals}
 predict(model1, interval = "confidence")
+```
+
+## Building Models for County
+
+```{r import data}
+county_data <- read_csv("county_data.csv")
+```
+
+```{r rename county variable}
+county_clean <- county_data |>
+  rename(
+    homeless = `Overall Homeless`
+  )
+county_clean
+```
+
+```{r county model building}
+county_model1 <- lm(homeless ~ funding_tot, data = county_clean)
+summary(county_model1) 
+```
+
+```{r county residuals}
+plot(county_model1$fitted.values, county_model1$residuals,
+     xlab = "Fitted Values",
+     ylab = "Residuals",
+     main = "Residuals vs Fitted")
+
+abline(h = 0, col = "red", lty = 2)
+```
+
+```{r county residuals}
+predict(county_model1, interval = "confidence")
 ```
 
 
