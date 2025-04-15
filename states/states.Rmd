@@ -32,11 +32,44 @@ states_clean <- states |>
 
 ### Ex 3
 ```{r}
-plot_usmap(data = states_clean, values = "homeless", regions = "states") +
-  scale_fill_continuous(name = "Homeless Population", label = scales::comma) +
-  labs(title = "Homeless Population by State") +
+plot_usmap(data = states_clean, values = "funding_total", regions = "states") +
+  scale_fill_continuous(name = "Funding Total", label = scales::comma) +
+  labs(title = "State Funding Levels for Homelessness") +
+  theme(legend.position = "right")
+```
+
+```{r}
+library(usmap)
+library(ggplot2)
+library(scales)
+
+plot_usmap(data = states_clean, values = "homeless_rate", regions = "states") +
+  scale_fill_gradient(
+    name = "Homeless Population",
+    low = "lightblue",
+    high = "darkblue",
+    label = scales::comma  # <- This is the fix!
+  ) +
+  labs(
+  title = "Homeless Population by State",
+  subtitle = "Color intensity represents the total homeless population") +
   theme(legend.position = "right")
 
+```
+
+
+
+```{r}
+states_clean$funding_per_capita <- states_clean$funding_total / states_clean$population
+
+
+plot_usmap(data = states_clean, values = "funding_per_capita", regions = "states") +
+  scale_fill_continuous(
+    name = "Funding per Capita", 
+    label = label_dollar(scale = 1)  # Makes it show as $X.XX
+  ) +
+  labs(title = "State Funding per Capita for Homelessness") +
+  theme(legend.position = "right")
 ```
 
 
@@ -49,6 +82,27 @@ plot_usmap(data = states_clean, values = "homeless_rate", regions = "states") +
   scale_fill_continuous(name = "Homeless Rate", label = scales::percent) +
   labs(title = "Homeless Rate by State") +
   theme(legend.position = "right")
+
+states_clean <- states_clean %>%
+  mutate(homeless_rate = homeless / population)
+
+# Get centroids data for state labels
+centroids <- us_map(regions = "states") %>%
+  group_by(full) %>%
+  summarize(x = mean(x, na.rm = TRUE),
+            y = mean(y, na.rm = TRUE))
+
+# Join homeless rates with centroids
+centroids <- left_join(centroids, states_clean, by = c("full" = "state"))
+
+# Plot map with labels
+plot_usmap(data = states_clean, values = "homeless_rate", regions = "states") +
+  scale_fill_continuous(name = "Homeless Rate", label = scales::percent) +
+  labs(title = "Homeless Rate by State") +
+  theme(legend.position = "right") +
+  geom_text(data = centroids, 
+            aes(x = x, y = y, label = scales::percent(homeless_rate, accuracy = 0.01)),
+            size = 2.5)
 
 ```
 
