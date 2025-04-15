@@ -551,7 +551,7 @@ a$geoCode <- as.character(a$geoCode)
 
 a <- a |>
   mutate(state  = str_extract(coc_num, "[A-Z]{1,2}"))
-
+   
 
 
 
