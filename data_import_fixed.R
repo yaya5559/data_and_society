@@ -407,6 +407,9 @@ nohome2$`CoC Number`[209] <- "MO-604"
 program2 <- cind_cut |>
   left_join(cpro_cut, by=c("GEOID" = "GEOID"))
 
+program2 <- program2 |>
+  mutate(fips_state = str_extract(GEOID, "[0-9]{1,2}"))
+
 
 program2$GEOID <- as.character(program2$GEOID)
 
@@ -507,7 +510,7 @@ colnames(cdat)
 ### Now to group by coc
 
 cocdat <- cdat |>
-  group_by(coc_num, coc_name, `CoC Category`, `Count Types`) |>
+  group_by(coc_num, coc_name, `CoC Category`, `Count Types`, fips_state) |>
   summarise(`Overall Homeless` = mean(`Overall Homeless`),
             `Overall Homeless - Under 18` = mean(`Overall Homeless - Under 18`),
             `Overall Homeless - Age 18 to 24` = mean(`Overall Homeless - Age 18 to 24`),
