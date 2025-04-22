@@ -77,8 +77,6 @@ coc_data |>
 coc_data |>
   ggplot() +
   geom_jitter(aes(x = funding_tot/total_population, y = `Overall Homeless`/total_population, color = poverty_rate)) +
-  scale_x_log10() +
-  scale_y_log10() +
   scale_color_continuous(type = "viridis")
 
 

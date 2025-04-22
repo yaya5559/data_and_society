@@ -635,7 +635,7 @@ hud_gis <- stupid_simple_GIS |>
 
 # write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
-sf::st_write(hud_gis, "~/Data and Society/data_and_society/coc_data_with_GIS.shp")
+sf::st_write(stupid_simple_GIS, "~/Data and Society/data_and_society/stupid_simple_GIS.shp")
 
 ?st_write.data.frame
 ### Notes:
