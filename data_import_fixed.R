@@ -633,9 +633,11 @@ hud_gis <- stupid_simple_GIS |>
 
 # write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
-write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
+# write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
+sf::st_write(hud_gis, "~/Data and Society/data_and_society/coc_data_with_GIS.shp")
 
+?st_write.data.frame
 ### Notes:
 # Regional access point <- look this up (something to do with coordinated entry)
 # Balance of state CoC is managed by department of commerce for each state

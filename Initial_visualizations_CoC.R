@@ -1,8 +1,46 @@
 library(tidyverse)
+library(sf)
 
 county_data <- read_csv("county_data.csv")
 coc_data <- read_csv("coc_data.csv")
 
+GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
+
+stupid_simple_GIS <- GIS |>
+  rmapshaper::ms_simplify(keep = 0.001, keep_shapes = FALSE)
+
+coc_data <- stupid_simple_GIS |>
+  right_join(coc_data, by = c("COCNUM" = "coc_num"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Scatterplots
 
 coc_data |>
   ggplot() +
@@ -45,7 +83,7 @@ coc_data |>
 
 
 
-
+### Histograms
 
 coc_data |> 
   ggplot() +
