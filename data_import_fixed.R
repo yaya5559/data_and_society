@@ -3,6 +3,13 @@ library(readxl)
 library(sf)
 library(mapview)
 library(broom)
+library(rmapshaper)
+library(tigris)
+library(tmap)
+library(ggmapinset)
+library(ggrepel)
+
+
 
 
 sind <- read_csv("table4_state-indicator.csv")
@@ -600,16 +607,11 @@ cocdat <- cdat |>
 
 
 
-write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+# write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
 
-us_county_v2 <- us_county |>
-  mutate(county = str_replace(county, " County", ""),
-         county = str_replace(county, " Bourough", ""),
-         county = str_replace(county, " city", ""),
-         county = str_replace(county, " Parish", ""))
 
 
 
@@ -622,15 +624,28 @@ GIS |>
   ggplot() +
   geom_sf()
 
-slim_GIS |>
-  ggplot() +
+# simplifying
+
+stupid_simple_GIS <- GIS |>
+  rmapshaper::ms_simplify(keep = 0.001, keep_shapes = FALSE)
+
+stupid_simple_GIS |>
+  ggplot() + 
   geom_sf()
 
 
-# Need to turn this off for simplify and on when plotting map
-sf_use_s2(TRUE)
 
-slim_GIS <- st_simplify(GIS, preserveTopology = FALSE, dTolerance = 1000)
+hud_gis <- stupid_simple_GIS |>
+  right_join(cocdat, by = c("COCNUM" = "coc_num"))
+
+hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI") |>
+  ggplot() +
+  geom_sf(aes(fill = log10(funding_tot/`Overall Homeless`))) +
+  scale_fill_continuous(name = NULL)
+
+write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data.csv")
+
 
 
 
