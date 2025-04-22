@@ -620,9 +620,9 @@ cocdat <- cdat |>
 
 GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
 
-GIS |>
-  ggplot() +
-  geom_sf()
+# GIS |>
+#   ggplot() +
+#   geom_sf()
 
 # simplifying
 
