@@ -57,11 +57,21 @@ coc_data |>
   scale_y_log10()
 
 
-
+### Maps
 
 coc_data |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR") |>
   ggplot() +
-  geom_sf(aes(fill = `Overall Homeless`/total_population))
+  geom_sf(aes(fill = log10(funding_tot/`Overall Homeless`))) +
+  scale_fill_continuous(name = NULL)
+
+
+
+
+
+
+
+
 
 ### Color points based on other variables
 
