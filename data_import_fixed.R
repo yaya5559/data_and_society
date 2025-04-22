@@ -644,7 +644,7 @@ hud_gis |>
   geom_sf(aes(fill = log10(funding_tot/`Overall Homeless`))) +
   scale_fill_continuous(name = NULL)
 
-# write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data.csv")
+write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
