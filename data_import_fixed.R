@@ -242,7 +242,7 @@ sdat <- mutate(sdat,
                  public_hsg_cap +
                  s8_project)
 
-write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
+# write.csv(sdat, file = "~/Data and Society/data_and_society/state_data.csv")
 
 
 
@@ -494,7 +494,7 @@ cdat <- mutate(b,
                  public_hsg_cap +
                  s8_project)
 
-write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
+# write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
 
 
 
@@ -511,47 +511,47 @@ colnames(cdat)
 
 cocdat <- cdat |>
   group_by(coc_num, coc_name, `CoC Category`, `Count Types`, fips_state) |>
-  summarise(`Overall Homeless` = mean(`Overall Homeless`),
-            `Overall Homeless - Under 18` = mean(`Overall Homeless - Under 18`),
-            `Overall Homeless - Age 18 to 24` = mean(`Overall Homeless - Age 18 to 24`),
-            `Overall Homeless - Age 25 to 34` = mean(`Overall Homeless - Age 25 to 34`),
-            `Overall Homeless - Age 35 to 44` = mean(`Overall Homeless - Age 35 to 44`),
-            `Overall Homeless - Age 45 to 54` = mean(`Overall Homeless - Age 45 to 54`),
-            `Overall Homeless - Age 55 to 64` = mean(`Overall Homeless - Age 55 to 64`),
-            `Overall Homeless - Over 64` = mean(`Overall Homeless - Over 64`),
-            `Overall Homeless - Woman` = mean(`Overall Homeless - Woman`),
-            `Overall Homeless - Man` = mean(`Overall Homeless - Man`),
-            `Overall Homeless - Transgender` = mean(`Overall Homeless - Transgender`),
-            `Overall Homeless - Non Binary` = mean(`Overall Homeless - Non Binary`),
-            `Overall Homeless - More Than One Gender` = mean(`Overall Homeless - More Than One Gender`),
-            `Overall Homeless - Gender Questioning` = mean(`Overall Homeless - Gender Questioning`),
-            `Overall Homeless - Culturally Specific Identity` = mean(`Overall Homeless - Culturally Specific Identity`),
-            `Overall Homeless - Different Identity` = mean(`Overall Homeless - Different Identity`),
-            `Overall Homeless - Non-Hispanic/Latina/e/o` = mean(`Overall Homeless - Non-Hispanic/Latina/e/o`),
-            `Overall Homeless - Hispanic/Latina/e/o` = mean(`Overall Homeless - Hispanic/Latina/e/o`),
-            `Overall Homeless - Asian or Asian American` = mean(`Overall Homeless - Asian or Asian American`),
-            `Overall Homeless - Black, African American, or African` = mean(`Overall Homeless - Black, African American, or African`),
-            `Overall Homeless - Middle Eastern or North African` = mean(`Overall Homeless - Middle Eastern or North African`),
-            `Overall Homeless - White` = mean(`Overall Homeless - White`),
-            `Overall Homeless - Native Hawaiian or Other Pacific Islander` = mean(`Overall Homeless - Native Hawaiian or Other Pacific Islander`),
-            `Overall Homeless Veterans` = mean(`Overall Homeless Veterans`),
-            `Overall Chronically Homeless` = mean(`Overall Chronically Homeless`),
-            `Overall Homeless People in Families` = mean(`Overall Homeless People in Families`),
-            `Overall Homeless Individuals` = mean(`Overall Homeless Individuals`),
-            `Overall Homeless Unaccompanied Youth (Under 25)` = mean(`Overall Homeless Unaccompanied Youth (Under 25)`),
-            `Overall Homeless Parenting Youth (Under 25)` = mean(`Overall Homeless Parenting Youth (Under 25)`),
-            `Sheltered Total Homeless` = mean(`Sheltered Total Homeless`),
-            `Sheltered ES Homeless` = mean(`Sheltered ES Homeless`),
-            `Sheltered TH Homeless` = mean(`Sheltered TH Homeless`),
-            `Sheltered SH Homeless` = mean(`Sheltered SH Homeless`),
-            `Unsheltered Homeless` = mean(`Unsheltered Homeless`),
-            `Total Year-Round Beds (ES, TH, SH)` = mean(`Total Year-Round Beds (ES, TH, SH)`),
-            `Total Year-Round Beds (ES)...6` = mean(`Total Year-Round Beds (ES)...6`),
-            `Total Year-Round Beds (TH)...7` = mean(`Total Year-Round Beds (TH)...7`),
-            `Total Year-Round Beds (SH)...8` = mean(`Total Year-Round Beds (SH)...8`),
-            `Total Year-Round Beds (OPH)` = mean(`Total Year-Round Beds (OPH)`),
-            `Total Year-Round Beds (PSH)` = mean(`Total Year-Round Beds (PSH)`),
-            `Total Year-Round Beds (RRH)` = mean(`Total Year-Round Beds (RRH)`),
+  summarise(`Overall Homeless` = sum(`Overall Homeless`),
+            `Overall Homeless - Under 18` = sum(`Overall Homeless - Under 18`),
+            `Overall Homeless - Age 18 to 24` = sum(`Overall Homeless - Age 18 to 24`),
+            `Overall Homeless - Age 25 to 34` = sum(`Overall Homeless - Age 25 to 34`),
+            `Overall Homeless - Age 35 to 44` = sum(`Overall Homeless - Age 35 to 44`),
+            `Overall Homeless - Age 45 to 54` = sum(`Overall Homeless - Age 45 to 54`),
+            `Overall Homeless - Age 55 to 64` = sum(`Overall Homeless - Age 55 to 64`),
+            `Overall Homeless - Over 64` = sum(`Overall Homeless - Over 64`),
+            `Overall Homeless - Woman` = sum(`Overall Homeless - Woman`),
+            `Overall Homeless - Man` = sum(`Overall Homeless - Man`),
+            `Overall Homeless - Transgender` = sum(`Overall Homeless - Transgender`),
+            `Overall Homeless - Non Binary` = sum(`Overall Homeless - Non Binary`),
+            `Overall Homeless - More Than One Gender` = sum(`Overall Homeless - More Than One Gender`),
+            `Overall Homeless - Gender Questioning` = sum(`Overall Homeless - Gender Questioning`),
+            `Overall Homeless - Culturally Specific Identity` = sum(`Overall Homeless - Culturally Specific Identity`),
+            `Overall Homeless - Different Identity` = sum(`Overall Homeless - Different Identity`),
+            `Overall Homeless - Non-Hispanic/Latina/e/o` = sum(`Overall Homeless - Non-Hispanic/Latina/e/o`),
+            `Overall Homeless - Hispanic/Latina/e/o` = sum(`Overall Homeless - Hispanic/Latina/e/o`),
+            `Overall Homeless - Asian or Asian American` = sum(`Overall Homeless - Asian or Asian American`),
+            `Overall Homeless - Black, African American, or African` = sum(`Overall Homeless - Black, African American, or African`),
+            `Overall Homeless - Middle Eastern or North African` = sum(`Overall Homeless - Middle Eastern or North African`),
+            `Overall Homeless - White` = sum(`Overall Homeless - White`),
+            `Overall Homeless - Native Hawaiian or Other Pacific Islander` = sum(`Overall Homeless - Native Hawaiian or Other Pacific Islander`),
+            `Overall Homeless Veterans` = sum(`Overall Homeless Veterans`),
+            `Overall Chronically Homeless` = sum(`Overall Chronically Homeless`),
+            `Overall Homeless People in Families` = sum(`Overall Homeless People in Families`),
+            `Overall Homeless Individuals` = sum(`Overall Homeless Individuals`),
+            `Overall Homeless Unaccompanied Youth (Under 25)` = sum(`Overall Homeless Unaccompanied Youth (Under 25)`),
+            `Overall Homeless Parenting Youth (Under 25)` = sum(`Overall Homeless Parenting Youth (Under 25)`),
+            `Sheltered Total Homeless` = sum(`Sheltered Total Homeless`),
+            `Sheltered ES Homeless` = sum(`Sheltered ES Homeless`),
+            `Sheltered TH Homeless` = sum(`Sheltered TH Homeless`),
+            `Sheltered SH Homeless` = sum(`Sheltered SH Homeless`),
+            `Unsheltered Homeless` = sum(`Unsheltered Homeless`),
+            `Total Year-Round Beds (ES, TH, SH)` = sum(`Total Year-Round Beds (ES, TH, SH)`),
+            `Total Year-Round Beds (ES)...6` = sum(`Total Year-Round Beds (ES)...6`),
+            `Total Year-Round Beds (TH)...7` = sum(`Total Year-Round Beds (TH)...7`),
+            `Total Year-Round Beds (SH)...8` = sum(`Total Year-Round Beds (SH)...8`),
+            `Total Year-Round Beds (OPH)` = sum(`Total Year-Round Beds (OPH)`),
+            `Total Year-Round Beds (PSH)` = sum(`Total Year-Round Beds (PSH)`),
+            `Total Year-Round Beds (RRH)` = sum(`Total Year-Round Beds (RRH)`),
             total_population = sum(total_pop),
             AWATER = sum(AWATER),
             ALAND = sum(ALAND),
@@ -638,3 +638,4 @@ slim_GIS <- st_simplify(GIS, preserveTopology = FALSE, dTolerance = 1000)
 # Regional access point <- look this up (something to do with coordinated entry)
 # Balance of state CoC is managed by department of commerce for each state
 # 
+
