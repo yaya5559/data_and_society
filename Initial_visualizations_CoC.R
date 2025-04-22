@@ -43,7 +43,8 @@ coc_data |>
   scale_y_log10() +
   scale_color_continuous(type = "viridis")
 
-?scale_color_continuous()
+
+
 
 
 coc_data |> 
@@ -55,7 +56,22 @@ coc_data |>
   geom_jitter(aes(x = med_hh_income, y = funding_tot/`Overall Homeless`)) +
   scale_y_log10()
 
+
+
+
+coc_data |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless`/total_population))
+
 ### Color points based on other variables
+
+
+CE <- read_csv("county_equity_metrics.csv")
+
+CE2 <- ifelse(CE$`program_doi_water_storage-percent_rank_water_system_violations` < 0, 'Underfunded', ifelse(CE$`program_doi_water_storage-percent_rank_poverty_rate` > 0, 'Overfunded', 'Just right'))
+?scale_fill_manual
+
+CE3 <- ifelse(CE$`program_doi_water_storage-percent_rank_poverty_rate` < 0, 'Underfunded', ifelse(CE$`program_doi_water_storage-percent_rank_water_system_violations` > 0, 'Overfunded', 'Just right'))
 
 
 CE |>
