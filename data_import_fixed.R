@@ -652,5 +652,4 @@ hud_gis |>
 ### Notes:
 # Regional access point <- look this up (something to do with coordinated entry)
 # Balance of state CoC is managed by department of commerce for each state
-# 
 
