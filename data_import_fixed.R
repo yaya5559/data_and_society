@@ -631,8 +631,9 @@ stupid_simple_GIS |>
 hud_gis <- stupid_simple_GIS |>
   right_join(cocdat, by = c("COCNUM" = "coc_num"))
 
-write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
+# write.csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
+write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
 
 ### Notes:
