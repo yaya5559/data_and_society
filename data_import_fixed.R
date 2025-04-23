@@ -572,6 +572,10 @@ cocdat <- cdat |>
             incomplete_kitchen = sum(incomplete_kitchen*total_pop)/sum(total_pop),
             housing_units = sum(housing_units*total_pop)/sum(total_pop),
             permits = sum(permits*total_pop)/sum(total_pop),
+            ind_hud_202 = sum(hud_202*total_pop)/sum(total_pop),
+            ind_hud_hcv = sum(hud_hcv*total_pop)/sum(total_pop),
+            ind_hud_pbs8 = sum(hud_pbs8*total_pop)/sum(total_pop),
+            ind_hud_ph = sum(hud_ph*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
             age_under_18 = sum(age_under_18*total_pop)/sum(total_pop),
             age_over_64 = sum(age_over_64*total_pop)/sum(total_pop),
@@ -583,13 +587,9 @@ cocdat <- cdat |>
             grrp_leading = sum(grrp_leading),
             hcv = sum(hcv),
             home = sum(home),
-            hud_202 = sum(hud_202),
             hud_disability = sum(hud_disability),
             hud_esg = sum(hud_esg),
-            hud_hcv = sum(hud_hcv),
             hud_hopwa = sum(hud_hopwa),
-            hud_pbs8 = sum(hud_pbs8),
-            hud_ph = sum(hud_ph),
             public_hsg = sum(public_hsg),
             public_hsg_cap = sum(public_hsg_cap),
             s8_project = sum(s8_project),
@@ -601,7 +601,7 @@ cocdat <- cdat |>
 
 
 
-write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+# write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
@@ -635,7 +635,7 @@ hud_gis <- stupid_simple_GIS |>
 
 # write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
-sf::st_write(stupid_simple_GIS, "~/Data and Society/data_and_society/stupid_simple_GIS.shp")
+# sf::st_write(stupid_simple_GIS, "~/Data and Society/data_and_society/stupid_simple_GIS.shp")
 
 ?st_write.data.frame
 ### Notes:

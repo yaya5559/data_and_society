@@ -1,13 +1,13 @@
 library(tidyverse)
 library(sf)
+library(plotly)
 
 county_data <- read_csv("county_data.csv")
 coc_data <- read_csv("coc_data.csv")
 
-GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
+stupid_simple_GIS <- st_read("stupid_simple_GIS.shp")
 
-stupid_simple_GIS <- GIS |>
-  rmapshaper::ms_simplify(keep = 0.001, keep_shapes = FALSE)
+
 
 coc_data <- stupid_simple_GIS |>
   right_join(coc_data, by = c("COCNUM" = "coc_num"))
@@ -99,9 +99,12 @@ coc_data |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR") |>
   ggplot() +
   geom_sf(aes(fill = log10(funding_tot/`Overall Homeless`))) +
-  scale_fill_continuous(name = NULL)
-
-
+  # scale_fill_continuous(name = "$$$ per homeless person") +
+  scale_fill_gradientn(transform = "log10",
+                     colours = c("lightgrey", "orange2", "blue4"),
+                     limits = c(2, 6.1), breaks = c(3, 4, 5, 6),
+                     labels = c("$1,000", "$10,000", "$100,000", "$1,000,000"),
+                     name = "Funding per homeless person")
 
 
 
