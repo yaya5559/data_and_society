@@ -10,9 +10,7 @@ stupid_simple_GIS <- st_read("stupid_simple_GIS.shp")
 
 
 coc_data <- stupid_simple_GIS |>
-  right_join(coc_data, by = c("COCNUM" = "coc_num"))
-
-
+  right_join(coc_data, by = c("COCNUM" = "coc_num", "COCNAME" = "coc_name"))
 
 
 
@@ -102,8 +100,8 @@ coc_data |>
   # scale_fill_continuous(name = "$$$ per homeless person") +
   scale_fill_gradientn(transform = "log10",
                      colours = c("lightgrey", "orange2", "blue4"),
-                     limits = c(2, 6.1), breaks = c(3, 4, 5, 6),
-                     labels = c("$1,000", "$10,000", "$100,000", "$1,000,000"),
+                     limits = c(2, 6.01), breaks = c(2, 3, 4, 5, 6),
+                     labels = c("$100", "$1,000", "$10,000", "$100,000", "$1,000,000"),
                      name = "Funding per homeless person")
 
 
