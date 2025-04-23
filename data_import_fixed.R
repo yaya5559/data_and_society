@@ -506,19 +506,19 @@ cdat <- mutate(b,
 
 
 
+cdat <- cdat |>
+  rename(state_abv = state) |>
+  rename(state_full = state.x)
 
 
 
-colnames(cdat)
 
 
 ### Now to group by coc
 
 cocdat <- cdat |>
-  group_by(coc_num, coc_name, `CoC Category`, `Count Types`, fips_state) |>
-  summarise(state_full = state.x,
-            state_abv = state,
-            `Overall Homeless` = sum(`Overall Homeless`),
+  group_by(coc_num, coc_name, `CoC Category`, `Count Types`, fips_state, state_full, state_abv) |>
+  summarise(`Overall Homeless` = sum(`Overall Homeless`),
             `Overall Homeless - Under 18` = sum(`Overall Homeless - Under 18`),
             `Overall Homeless - Age 18 to 24` = sum(`Overall Homeless - Age 18 to 24`),
             `Overall Homeless - Age 25 to 34` = sum(`Overall Homeless - Age 25 to 34`),
