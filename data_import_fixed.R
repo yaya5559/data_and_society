@@ -499,7 +499,7 @@ cdat <- mutate(b,
                  public_hsg_cap +
                  s8_project)
 
-# write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
+write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
 
 
 
@@ -590,9 +590,9 @@ cocdat <- cdat |>
             coc = sum(coc),
             cdbg_entitlement = sum(cdbg_entitlement),
             elderly = sum(elderly),
-            grrp_comp = sum(grrp_comp),
-            grrp_elements = sum(grrp_elements),
-            grrp_leading = sum(grrp_leading),
+            # grrp_comp = sum(grrp_comp),
+            # grrp_elements = sum(grrp_elements),
+            # grrp_leading = sum(grrp_leading),
             hcv = sum(hcv),
             home = sum(home),
             hud_disability = sum(hud_disability),
@@ -609,7 +609,7 @@ cocdat <- cdat |>
 
 
 
-# write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
