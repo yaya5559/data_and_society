@@ -279,9 +279,9 @@ cpro_cut <- cpro |>
          coc, 
          cdbg_entitlement, 
          elderly, 
-         grrp_comp, 
-         grrp_elements, 
-         grrp_leading, 
+         # grrp_comp, 
+         # grrp_elements, 
+         # grrp_leading, 
          home, 
          hcv,
          hud_disability, 
@@ -488,9 +488,9 @@ cdat <- mutate(b,
                funding_tot = coc + 
                  cdbg_entitlement +
                  elderly +
-                 grrp_comp +
-                 grrp_elements +
-                 grrp_leading +
+                 # grrp_comp +
+                 # grrp_elements +
+                 # grrp_leading +
                  home +
                  hud_disability +
                  hud_esg +
@@ -566,12 +566,12 @@ cocdat <- cdat |>
             ALAND = sum(ALAND),
             disadvantaged_county = mean(disadvantaged_county),
             persistent_poverty_county = mean(persistent_poverty_county),
-            percent_rural = sum(percent_rural*total_pop)/sum(total_pop),
-            percent_urban = sum(percent_urban*total_pop)/sum(total_pop),
+            percent_rural = sum(percent_rural*ALAND)/sum(ALAND),
+            percent_urban = sum(percent_urban*ALAND)/sum(ALAND),
             percent_poc = sum(percent_poc*total_pop)/sum(total_pop),
             poverty_rate = sum(poverty_rate*total_pop)/sum(total_pop),
             pop_density = sum(total_pop)/sum(ALAND),
-            med_hh_income = mean(med_hh_income),
+            med_hh_income = mean(sum(med_hh_income*total_pop)/sum(total_pop)),
             employment_access_index = mean(employment_access_index),
             housing_cost_burden = mean(housing_cost_burden),
             overcrowded_housing = sum(housing_units*total_pop*overcrowded_housing)/sum(housing_units*total_pop),
@@ -644,6 +644,9 @@ hud_gis <- stupid_simple_GIS |>
 # write_csv(hud_gis, file = "~/Data and Society/data_and_society/coc_data_with_GIS.csv")
 
 # sf::st_write(stupid_simple_GIS, "~/Data and Society/data_and_society/stupid_simple_GIS.shp")
+
+# sf::st_write(stupid_simple_GIS, "~/Data and Society/data_and_society/stupid_simple_GIS.gdb")
+
 
 ?st_write.data.frame
 ### Notes:

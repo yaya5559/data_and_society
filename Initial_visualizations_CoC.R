@@ -5,7 +5,7 @@ library(plotly)
 county_data <- read_csv("county_data.csv")
 coc_data <- read_csv("coc_data.csv")
 
-stupid_simple_GIS <- st_read("stupid_simple_GIS.shp")
+stupid_simple_GIS <- sf::st_read("stupid_simple_GIS.gdb")
 
 
 
