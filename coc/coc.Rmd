@@ -1,6 +1,6 @@
 ---
-title: "Lab Name"
-author: "Author Name"
+title: "coc"
+author: "Shukra Jaliya"
 date: "`r Sys.Date()`"
 output: openintro::lab_report
 ---
@@ -8,17 +8,110 @@ output: openintro::lab_report
 ```{r load-packages, message=FALSE}
 library(tidyverse)
 library(openintro)
+coc<-read_csv("coc_data.csv")
 ```
 
 ### Exercise 1
 
-Insert any text here.
+total_population- count of people living in CoC poverty_rate -percent of people living below federal poverty line
+Overall Homeless -total homeless population in CoC 
+Unsheltered Homeless- count of homeless not sleeping in space designated for or ordinarily used for sleeping 
+Sheltered Total Homeless- count of homeless sleeping in shelter or shelter-like facility (publicly or privately funded/owned) 
+funding_tot- funding total
 
 ```{r code-chunk-label}
-# Insert code for Exercise 1 here
+#colnames(coc)
+
 ```
 
 ### Exercise 2
 
-...
+```{r}
+coc <- coc %>%
+  rename(
+    total_homeless_count = `Overall Homeless`,
+    unsheltered_homeless_count = `Unsheltered Homeless`,
+    sheltered_homeless_count = `Sheltered Total Homeless`,
+  )
+```
 
+```{r}
+coc$homeless_rate <- coc$total_homeless_count / coc$total_population
+coc$funding_rate <- coc$funding_tot / coc$total_population
+coc$unsheltered_rate <- coc$unsheltered_homeless_count / coc$total_population
+coc$sheltered_rate <- coc$sheltered_homeless_count / coc$total_population
+```
+
+. HOMELESS RATE
+
+```{r homelessness predicting funding}
+#options(scipen = 999)
+plot(funding_rate~homeless_rate + total_population, data = coc)
+model <- lm(funding_rate~homeless_rate + total_population, data = coc)
+summary(model)
+
+
+```
+
+
+
+```{r }
+
+coc$log_funding_rate <- log(coc$funding_rate + 1)
+model_log <- lm(log_funding_rate ~ homeless_rate + total_population, data = coc)
+summary(model_log)
+
+# Scatter plot for homeless_rate vs log_funding_rate
+ggplot(coc, aes(x = homeless_rate, y = log_funding_rate)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Homeless Rate vs Log of Funding Rate", x = "Homeless Rate", y = "Log of Funding Rate")
+
+# Scatter plot for total_population vs log_funding_rate
+ggplot(coc, aes(x = total_population, y = log_funding_rate)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE, color = "green") +
+  labs(title = "Total Population vs Log of Funding Rate", x = "Total Population", y = "Log of Funding Rate")
+
+```
+
+
+
+
+
+```{r}
+coc$log_funding_rate <- log(coc$funding_rate + 1)
+model_log <- lm(log_funding_rate ~ homeless_rate + total_population, data = coc)
+summary(model_log)
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+plot(funding_rate~unsheltered_rate, data = coc)
+model1 <- lm(funding_rate~unsheltered_rate + total_population, data = coc)
+summary(model1)
+```
+
+```{r}
+plot(funding_rate~sheltered_rate, data = coc)
+model2 <- lm(funding_rate~sheltered_rate + total_population,, data = coc)
+summary(model2)
+```
+
+
+```{r}
+coc$log_density <- log(coc$pop_density + 1)
+model6<-lm(funding_rate ~ homeless_rate + total_population + log_density, data = coc)
+summary(model6)
+```
+
+...
