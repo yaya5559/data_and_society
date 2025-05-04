@@ -1,0 +1,12 @@
+name: demographic
+title: demographic
+username: yaahya
+account: yaahya
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14651101
+bundleId: 10204031
+url: https://yaahya.shinyapps.io/demographic/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
