@@ -599,7 +599,7 @@ cdat <- mutate(b,
                  public_hsg_cap +
                  s8_project)
 
-write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
+# write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
 
 
 
@@ -718,7 +718,7 @@ cocdat <- cdat |>
 
 
 
-write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+# write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
