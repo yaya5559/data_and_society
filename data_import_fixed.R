@@ -427,12 +427,12 @@ nohome3$`CoC Name`[9] <- "Massachusetts Balance of State CoC"
 nohome3$`CoC Number`[9] <- "MA-516"
 nohome3$`CoC Name`[10] <- "Massachusetts Balance of State CoC"
 nohome3$`CoC Number`[10] <- "MA-516"
-nohome3$`CoC Name`[11] <- "Attleboro, Taunton/Bristol County CoC"
-nohome3$`CoC Number`[11] <- "MA-519"
+nohome3$`CoC Name`[11] <- "New Bedford, Attleboro, Taunton/Bristol County CoC"
+nohome3$`CoC Number`[11] <- "MA-505"
 nohome3$`CoC Name`[12] <- "Massachusetts Balance of State CoC"
 nohome3$`CoC Number`[12] <- "MA-516"
-nohome3$`CoC Name`[13] <- "Attleboro, Taunton/Bristol County CoC"
-nohome3$`CoC Number`[13] <- "MA-519"
+nohome3$`CoC Name`[13] <- "New Bedford, Attleboro, Taunton/Bristol County CoC"
+nohome3$`CoC Number`[13] <- "MA-505"
 nohome3$`CoC Name`[15] <- "Dearborn, Dearborn Heights, Westland/Wayne County CoC"
 nohome3$`CoC Number`[15] <- "MI-502"
 nohome3$`CoC Name`[17] <- "Nashua/Hillsborough County CoC"
@@ -612,15 +612,15 @@ cdat <- cdat |>
 
 
 
-cnt_chkr <- cnt_to_coc |>
-  group_by(coc_num, coc_name) |>
-  summarise()
-
-chkr <- cnt_chkr |>
-  left_join(cocdat, by = c("coc_num" = "coc_num", "coc_name" = "coc_name"))
-
-chkd <- chkr |>
-  filter(is.na(state_full))
+# cnt_chkr <- cnt_to_coc |>
+#   group_by(coc_num, coc_name) |>
+#   summarise()
+# 
+# chkr <- cnt_chkr |>
+#   left_join(cocdat, by = c("coc_num" = "coc_num", "coc_name" = "coc_name"))
+# 
+# chkd <- chkr |>
+#   filter(is.na(state_full))
 
 
 ### Now to group by coc
@@ -718,7 +718,7 @@ cocdat <- cdat |>
 
 
 
- write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
