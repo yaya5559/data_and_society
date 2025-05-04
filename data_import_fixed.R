@@ -532,6 +532,7 @@ cnt_to_coc$`CoC Name`[2604] <- "NM-500 - Albuquerque CoC"
 cnt_to_coc$`CoC Name`[2915] <- "OK-502 - Oklahoma City CoC"
 cnt_to_coc$`CoC Name`[3665] <- "TX-611 - Amarillo CoC"
 cnt_to_coc$`CoC Name`[3668] <- "TX-611 - Amarillo CoC"
+cnt_to_coc$`CoC Name`[1649] <- "MA-505 - New Bedford, Attleboro, Taunton/Bristol County CoC"
 
 
 cnt_to_coc <- cnt_to_coc |>
