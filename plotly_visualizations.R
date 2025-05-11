@@ -448,11 +448,11 @@ p21 <- hud_gis |>
   ggplot() +
   geom_sf(aes(fill = (`Overall Homeless Unaccompanied Youth (Under 25)` / `Overall Homeless`),
               text = paste(coc_name,
-                           '<br>Percent of homeless people who are unaccompanied youth: ', round(`Overall Homeless Unaccompanied Youth (Under 25)`/`Overall Homeless`*100, digits = 3), "%"))) +
+                           '<br>Percent of homeless people who <br>are unaccompanied youth: ', round(`Overall Homeless Unaccompanied Youth (Under 25)`/`Overall Homeless`*100, digits = 3), "%"))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "gold3", "red4"),
                        labels = scales::percent_format(),
-                       name = "% of homeless people who <br>are unaccompanied youth") +
+                       name = "% of homeless people who <br>are unaccompanied youth")
   
 
 
@@ -460,6 +460,129 @@ ggplotly(p21, tooltip = "text") |>
   style(hoveron = "fills")
 
 
+
+
+# Homeless rate by $/homeless individual scatterplot (poverty rate = color), size = population
+
+p22 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = funding_tot/`Overall Homeless`, y = `Overall Homeless`/total_population, color = poverty_rate, size = total_population,
+                  text = paste(coc_name,
+                               '<br>Funding per homeless person: $', round((funding_tot/`Overall Homeless`), digits = 2),
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%',
+                               '<br>Poverty rate: ', round(poverty_rate*100, digits = 3), "%"))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        limits = c(0, 0.5), breaks = c(0, .1, .2, .3, .4),
+                        labels = c("0%", "10%", "20%", "30%", "40%"),
+                        name = "Poverty Rate") +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::percent_format()) +
+  labs(title = "Homeless Rate by Funding per Homeless Person", x = "Funding per Homeless Individual (USD)", y = "Homelessness Rate (%)")
+
+ggplotly(p22, tooltip = "text")
+
+
+
+
+
+# Rename
+
+p23 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = `Overall Homeless Unaccompanied Youth (Under 25)`/`Overall Homeless`, y = funding_tot/`Overall Homeless`, color = poverty_rate, size = total_population,
+                  text = paste(coc_name,
+                               '<br>Funding per homeless person: $', round((funding_tot/`Overall Homeless`), digits = 2),
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%',
+                               '<br>Poverty rate: ', round(poverty_rate*100, digits = 3), "%"))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        limits = c(0, 0.5), breaks = c(0, .1, .2, .3, .4),
+                        labels = c("0%", "10%", "20%", "30%", "40%"),
+                        name = "Poverty Rate") +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Homeless Rate by Funding per Homeless Person", x = "% of Homeless who are Unacc. Youth", y = "Funding/homeless person")
+
+ggplotly(p23, tooltip = "text")
+
+
+
+
+
+
+
+
+
+
+# Rename
+
+p24 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = capacity_housing, y = funding_tot/total_population, color = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Funding per homeless person: $', round((funding_tot/`Overall Homeless`), digits = 2),
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%',
+                               '<br>Poverty rate: ', round(poverty_rate*100, digits = 3), "%"))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Poverty Rate") +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Homeless Rate by Funding per Homeless Person", x = "Government officers working to secure housing per capita", 
+       y = "Funding/capita")
+
+ggplotly(p24, tooltip = "text")
+
+
+
+
+
+
+# Look into Alpine, Inyo, and Mono Counties CoC
+
+p25 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless`/total_population,
+              text = paste(coc_name,
+                           '<br>Homeless rate: ', round((`Overall Homeless`/total_population)*100, digits = 2), "%"))) +
+  scale_fill_gradientn(colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Homeless Rate")
+
+ggplotly(p25, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+
+
+
+
+
+p25 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = total_population,
+              text = paste(coc_name,
+                           '<br>POP: ', round((total_population), digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Pop")
+
+ggplotly(p25, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+p25 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = funding_tot,
+              text = paste(coc_name,
+                           '<br>Fnd: ', round((funding_tot), digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Fnd")
+
+ggplotly(p25, tooltip = "text") |>
+  style(hoveron = "fills")
 
 
 

@@ -262,6 +262,88 @@ cpit <- read_csv("2024-PIT-Counts-by-CoC.csv")
 chic <- read_csv("2024-HIC-Counts-by-CoC.csv",
                  skip = 1)
 
+acs <- read_csv("ACSDP5Y2023.DP05-Data.csv", 
+                skip = 1)
+
+acs <- acs |>
+  separate(Geography, c("nada", "GEOID"), sep = "US")
+
+acs <- acs |>
+  separate(`Geographic Area Name`, c("county", "state"), sep = ", ")
+
+acs <- acs |>
+  select(GEOID,
+         county,
+         state,
+         `Estimate!!SEX AND AGE!!Total population`,
+         `Estimate!!SEX AND AGE!!Total population!!Female`,
+         `Estimate!!SEX AND AGE!!Total population!!Male`,
+         `Estimate!!SEX AND AGE!!Total population!!Under 18 years`,
+         `Estimate!!SEX AND AGE!!Total population!!65 years and over...59`,
+         `Estimate!!SEX AND AGE!!Total population!!Under 5 years`,
+         `Estimate!!SEX AND AGE!!Total population!!5 to 9 years`,
+         `Estimate!!SEX AND AGE!!Total population!!10 to 14 years`,
+         `Estimate!!SEX AND AGE!!Total population!!15 to 19 years`,
+         `Estimate!!SEX AND AGE!!Total population!!20 to 24 years`,
+         `Estimate!!SEX AND AGE!!Total population!!25 to 34 years`,
+         `Estimate!!SEX AND AGE!!Total population!!35 to 44 years`,
+         `Estimate!!SEX AND AGE!!Total population!!45 to 54 years`,
+         `Estimate!!SEX AND AGE!!Total population!!55 to 59 years`,
+         `Estimate!!SEX AND AGE!!Total population!!60 to 64 years`,
+         `Estimate!!SEX AND AGE!!Total population!!65 to 74 years`,
+         `Estimate!!SEX AND AGE!!Total population!!75 to 84 years`,
+         `Estimate!!SEX AND AGE!!Total population!!85 years and over`,
+         `Estimate!!SEX AND AGE!!Total population!!Median age (years)`,
+         `Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`,
+         `Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Not Hispanic or Latino`,
+         `Estimate!!RACE!!Total population!!One race!!American Indian and Alaska Native`,
+         `Estimate!!RACE!!Total population!!One race!!Asian`,
+         `Estimate!!RACE!!Total population!!One race!!Black or African American`,
+         `Estimate!!RACE!!Total population!!One race!!Native Hawaiian and Other Pacific Islander`,
+         `Estimate!!RACE!!Total population!!One race!!Some Other Race`,
+         `Estimate!!RACE!!Total population!!One race!!White`,
+         `Estimate!!RACE!!Total population!!Two or More Races...71`
+         )
+
+acs <- acs |>
+  group_by(GEOID) |>
+  summarise(county,
+            state,
+            popest = `Estimate!!SEX AND AGE!!Total population`,
+            female = `Estimate!!SEX AND AGE!!Total population!!Female`,
+            male = `Estimate!!SEX AND AGE!!Total population!!Male`,
+            under18 = `Estimate!!SEX AND AGE!!Total population!!Under 18 years`,
+            over65 = `Estimate!!SEX AND AGE!!Total population!!65 years and over...59`,
+            under5 = `Estimate!!SEX AND AGE!!Total population!!Under 5 years`,
+            fiveto9 = `Estimate!!SEX AND AGE!!Total population!!5 to 9 years`,
+            tento14 = `Estimate!!SEX AND AGE!!Total population!!10 to 14 years`,
+            fifteento19 = `Estimate!!SEX AND AGE!!Total population!!15 to 19 years`,
+            twentyto24 = `Estimate!!SEX AND AGE!!Total population!!20 to 24 years`,
+            age25to34 = `Estimate!!SEX AND AGE!!Total population!!25 to 34 years`,
+            age35to44 = `Estimate!!SEX AND AGE!!Total population!!35 to 44 years`,
+            age45to54 = `Estimate!!SEX AND AGE!!Total population!!45 to 54 years`,
+            fifty5to = `Estimate!!SEX AND AGE!!Total population!!55 to 59 years`,
+            sxtyto64 = `Estimate!!SEX AND AGE!!Total population!!60 to 64 years`,
+            sxty5to74 = `Estimate!!SEX AND AGE!!Total population!!65 to 74 years`,
+            svy5to84 = `Estimate!!SEX AND AGE!!Total population!!75 to 84 years`,
+            over85 = `Estimate!!SEX AND AGE!!Total population!!85 years and over`,
+            age18to24 = under5 + fiveto9 + tento14 + fifteento19 + twentyto24 - under18,
+            age55to64 = fifty5to + sxtyto64,
+            median_age = `Estimate!!SEX AND AGE!!Total population!!Median age (years)`,
+            hispaniclatinx = `Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Hispanic or Latino (of any race)`,
+            non_hispaniclatinx = `Estimate!!HISPANIC OR LATINO AND RACE!!Total population!!Not Hispanic or Latino`,
+            amer_indian_ak_native = `Estimate!!RACE!!Total population!!One race!!American Indian and Alaska Native`,
+            asian = `Estimate!!RACE!!Total population!!One race!!Asian`,
+            black = `Estimate!!RACE!!Total population!!One race!!Black or African American`,
+            native_hi_other_pi = `Estimate!!RACE!!Total population!!One race!!Native Hawaiian and Other Pacific Islander`,
+            other_race = `Estimate!!RACE!!Total population!!One race!!Some Other Race`,
+            white = `Estimate!!RACE!!Total population!!One race!!White`,
+            multi_racial = `Estimate!!RACE!!Total population!!Two or More Races...71`
+            )
+
+
+
+
 
 # programs to look at: coc, cdbg_entitlement, elderly, grrp_comp, grrp_elements, grrp_leading, hvc, home, 
 # hud_disability, hud_esg, hud_hopwa, hud_htf, public_hsg, public_hsg_cap, s8_project
@@ -503,6 +585,9 @@ program2 <- cind_cut |>
   left_join(cpro_cut, by=c("GEOID" = "GEOID"))
 
 program2 <- program2 |>
+  left_join(acs, by=c("GEOID" = "GEOID", "county" = "county", "state.x" = "state"))
+
+program2 <- program2 |>
   mutate(fips_state = str_extract(GEOID, "[0-9]{1,2}"))
 
 
@@ -687,6 +772,16 @@ cocdat <- cdat |>
             percent_rural = sum(percent_rural*ALAND)/sum(ALAND),
             percent_urban = sum(percent_urban*ALAND)/sum(ALAND),
             percent_poc = sum(percent_poc*total_pop)/sum(total_pop),
+            amer_indian_ak_native = sum(amer_indian_ak_native)/sum(popest),
+            asian = sum(asian)/sum(popest),
+            black = sum(black)/sum(popest),
+            native_hi_other_pi = sum(native_hi_other_pi)/sum(popest),
+            other_race = sum(other_race)/sum(popest),
+            white = sum(white)/sum(popest),
+            male = sum(male)/sum(popest),
+            female = sum(female)/sum(popest),
+            hispanic_latinx = sum(hispaniclatinx)/sum(popest),
+            non_hispanic_latinx = sum(non_hispaniclatinx)/sum(popest),
             poverty_rate = sum(poverty_rate*total_pop)/sum(total_pop),
             pop_density = sum(total_pop)/sum(ALAND),
             med_hh_income = mean(sum(med_hh_income*total_pop)/sum(total_pop)),
@@ -703,8 +798,12 @@ cocdat <- cdat |>
             ind_hud_pbs8 = sum(hud_pbs8*total_pop)/sum(total_pop),
             ind_hud_ph = sum(hud_ph*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
-            age_under_18 = sum(age_under_18*total_pop)/sum(total_pop),
-            age_over_64 = sum(age_over_64*total_pop)/sum(total_pop),
+            age_under_18 = sum(under18)/sum(popest),
+            age_25_to_34 = sum(age25to34)/sum(popest),
+            age_35_to_44 = sum(age35to44)/sum(popest),
+            age_45_to_54 = sum(age45to54)/sum(popest),
+            age_55_to_64 = sum(age55to64)/sum(popest),
+            age_over_64 = sum(over65)/sum(popest),
             coc = sum(coc),
             cdbg_entitlement = sum(cdbg_entitlement),
             elderly = sum(elderly),
@@ -719,7 +818,8 @@ cocdat <- cdat |>
             public_hsg = sum(public_hsg),
             public_hsg_cap = sum(public_hsg_cap),
             s8_project = sum(s8_project),
-            funding_tot = sum(funding_tot)
+            funding_tot = sum(funding_tot),
+
             
             
   )
@@ -727,7 +827,7 @@ cocdat <- cdat |>
 
 
 
-# write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
+write.csv(cocdat, file = "~/Data and Society/data_and_society/coc_data.csv")
 
 
 
