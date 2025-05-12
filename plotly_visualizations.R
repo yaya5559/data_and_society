@@ -586,3 +586,32 @@ ggplotly(p25, tooltip = "text") |>
 
 
 
+p26 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = age_over_64,
+              text = paste(coc_name,
+                           '<br>Population over 64: ', round((age_over_64*100), digits = 2), "%"))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Share of Population<br>Over 64",
+                       labels = percent_format())
+
+ggplotly(p26, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+
+p27 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = median_age,
+              text = paste(coc_name,
+                           '<br>Median age in CoC: ', round((median_age), digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Median age in CoC")
+
+ggplotly(p27, tooltip = "text") |>
+  style(hoveron = "fills")

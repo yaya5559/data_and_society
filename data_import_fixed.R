@@ -804,6 +804,7 @@ cocdat <- cdat |>
             age_45_to_54 = sum(age45to54)/sum(popest),
             age_55_to_64 = sum(age55to64)/sum(popest),
             age_over_64 = sum(over65)/sum(popest),
+            median_age = mean(sum(median_age*total_pop)/sum(total_pop)),
             coc = sum(coc),
             cdbg_entitlement = sum(cdbg_entitlement),
             elderly = sum(elderly),
