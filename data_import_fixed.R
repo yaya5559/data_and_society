@@ -799,6 +799,7 @@ cocdat <- cdat |>
             ind_hud_ph = sum(hud_ph*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
             age_under_18 = sum(under18)/sum(popest),
+            age_18_to_24 = sum(age18to24)/sum(popest),
             age_25_to_34 = sum(age25to34)/sum(popest),
             age_35_to_44 = sum(age35to44)/sum(popest),
             age_45_to_54 = sum(age45to54)/sum(popest),

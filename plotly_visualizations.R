@@ -615,3 +615,23 @@ p27 <- hud_gis |>
 
 ggplotly(p27, tooltip = "text") |>
   style(hoveron = "fills")
+
+
+
+
+
+
+
+
+p28 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = ,
+              text = paste(coc_name,
+                           '<br>Median age in CoC: ', round((median_age), digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Median age in CoC")
+
+ggplotly(p27, tooltip = "text") |>
+  style(hoveron = "fills")
