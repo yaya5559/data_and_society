@@ -13,7 +13,7 @@ stupid_simple_GIS <- GIS |>
   rmapshaper::ms_simplify(keep = 0.001, keep_shapes = FALSE)
 
 hud_gis <- stupid_simple_GIS |>
-  full_join(coc_data, by = c("COCNUM" = "coc_num"))
+  right_join(coc_data, by = c("COCNUM" = "coc_num"))
 
 ### consider right_join
 
@@ -717,8 +717,26 @@ p31 <- hud_gis |>
   labs(Title = "Emergency Solutions Grand Funding per Sheltered Homeless Person", x = "% of people homeless w/o shelter", y = "% of people homeless with shelter") +
   scale_x_log10(labels = scales::percent_format()) +
   scale_y_log10(labels = scales::percent_format()) +
-  geom_abline(
-  
-  )
+  stat_smooth(method = "lm")
 
 ggplotly(p31, tooltip = "text")
+
+
+
+p32 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = med_hh_income, y = funding_tot/(poverty_rate*total_population), color = `Overall Homeless`/total_population,
+                  text = paste(coc_name,
+                               '<br>Median Household Income: $', med_hh_income,
+                               '<br>Funding per impoverished person: $', round(funding_tot/(poverty_rate*total_population), digits = 2),
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Homelessness rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format(prefix = "$")) +
+  labs(title = "Homeless Rate by Funding per Impoverished Person", x = "Median Household Income (USD)", 
+       y = "Funding per Impoverished Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p32, tooltip = "text")
