@@ -6,3 +6,7 @@ race <- lm(funding_tot ~ pct_black + pct_asian + pct_white + pct_amer_indian_ak_
 summary(race)
 
 supernova(race)
+
+
+
+
