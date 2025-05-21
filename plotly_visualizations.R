@@ -19,6 +19,12 @@ hud_gis <- stupid_simple_GIS |>
 
 hud_gis <- sf::st_cast(hud_gis, "MULTIPOLYGON")
 
+hud_gis <- hud_gis |>
+  mutate(fnd_per_impov = funding_tot/(poverty_rate*total_population),
+         fnd_per_person = funding_tot/total_population,
+         fnd_per_hmls = funding_tot/`Overall Homeless`,
+         homeless_rate = `Overall Homeless`/total_population)
+
 
 
 
@@ -735,12 +741,11 @@ p32 <- hud_gis |>
                         labels = scales::percent_format()) +
   scale_x_log10(labels = scales::comma_format(prefix = "$")) +
   scale_y_log10(labels = scales::comma_format(prefix = "$")) +
-  labs(title = "Homeless Rate by Funding per Impoverished Person", x = "Median Household Income (USD)", 
+  labs(title = "Funding per Impoverished Person by Median Household Income", x = "Median Household Income (USD)", 
        y = "Funding per Impoverished Person") +
   theme(axis.text.x = element_text(angle = 45))
 
 ggplotly(p32, tooltip = "text")
-
 
 
 

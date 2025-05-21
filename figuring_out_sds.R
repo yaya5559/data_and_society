@@ -5,23 +5,32 @@ hud_gis |>
   ggplot() +
   geom_density(aes(x = pct_amer_indian_ak_native)) +
   geom_density(aes(x = `Overall Homeless - American Indian, Alaska Native, or Indigenous`/`Overall Homeless`), color = "red") +
-  scale_x_log10(labels = scales::percent_format())
+  scale_x_continuous(labels = scales::percent_format())
 
 
 hud_gis |>
   ggplot() +
   geom_density(aes(x = pct_white)) +
-  geom_density(aes(x = (`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/`Overall Homeless`), color = "red")
+  geom_density(aes(x = (`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/`Overall Homeless`), color = "red") +
+  scale_x_continuous(labels = scales::percent_format())
+
 
 
 hud_gis |>
   ggplot() +
   geom_density(aes(x = pct_black)) +
   geom_density(aes(x = `Overall Homeless - Black, African American, or African`/`Overall Homeless`), color = "red") +
-  scale_x_log10(labels = scales::percent_format())
+  scale_x_continuous(labels = scales::percent_format())
 
 
 
+### Are the log versions better or continuous?
+
+hud_gis |>
+  ggplot() +
+  geom_histogram(aes(x = pct_black), fill = "navy") +
+  geom_histogram(aes(x = `Overall Homeless - Black, African American, or African`/`Overall Homeless`), fill = "red3", alpha = 0.5) +
+  scale_x_continuous(labels = scales::percent_format())
 
 hud_gis |>
   ggplot() +
@@ -207,7 +216,8 @@ another |>
   geom_density(aes(x = sd_gap_multi), color = "darkgreen") +
   geom_density(aes(x = sd_gap_NHPI), color = "purple") +
   geom_density(aes(x = sd_gap_white), color = "orange") + 
-  scale_x_log10(labels = scales::comma_format())
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(title = "Gap (Homeless% - Population%) in standard deviations", x = "Gap size in standard deviations")
 
 another |>
   ggplot() +
@@ -218,9 +228,49 @@ smthn_to_graph |>
   ggplot() + 
   geom_col(aes(x = race, y = -median_sd, fill = race))
 
+
 sht |>
   ggplot() + 
   geom_col(aes(x = race, y = -mean_sd, fill = race))
+
+
+
+
+
+
+# Trying same thing as ooo but with entire fractions of population
+
+againnnn <- another |>
+  summarise(aIAN = median(gap_AIAN),
+            asian = median(gap_asian),
+            black = median(gap_black),
+            multi = median(gap_multi),
+            nHPI = median(gap_NHPI),
+            white = median(gap_white))
+
+againnnn <- againnnn |> 
+  pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "median_scale_of_diff")
+
+aaaagain <- another |>
+  summarise(aIAN = mean(gap_AIAN),
+            asian = mean(gap_asian),
+            black = mean(gap_black),
+            multi = mean(gap_multi),
+            nHPI = mean(gap_NHPI),
+            white = mean(gap_white))
+
+aaaagain <- aaaagain |> 
+  pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "mean_scale_of_diff")
+
+
+againnnn |>
+  ggplot() + 
+  geom_col(aes(x = race, y = -median_scale_of_diff, fill = race))
+
+aaaagain |>
+  ggplot() + 
+  geom_col(aes(x = race, y = -mean_scale_of_diff, fill = race))
+
 
 
 
@@ -233,12 +283,12 @@ ccc <- cdat |>
   summarise(total_population = sum(total_pop),
             total_homeless = mean(`Overall Homeless`),
             homeless_rate = mean(`Overall Homeless`)/sum(total_pop),
-            hmls_AIAN = mean(`Overall Homeless - American Indian, Alaska Native, or Indigenous`)/sum(`Overall Homeless`),
-            hmls_asian = mean(`Overall Homeless - Asian or Asian American`)/sum(`Overall Homeless`),
-            hmls_black = mean(`Overall Homeless - Black, African American, or African`)/sum(`Overall Homeless`),
-            hmls_multi = mean(`Overall Homeless - Multi-Racial`)/sum(`Overall Homeless`),
-            hmls_NHPI = mean(`Overall Homeless - Native Hawaiian or Other Pacific Islander`)/sum(`Overall Homeless`),
-            hmls_white = mean(`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/sum(`Overall Homeless`),
+            hmls_AIAN = mean(`Overall Homeless - American Indian, Alaska Native, or Indigenous`)/mean(`Overall Homeless`),
+            hmls_asian = mean(`Overall Homeless - Asian or Asian American`)/mean(`Overall Homeless`),
+            hmls_black = mean(`Overall Homeless - Black, African American, or African`)/mean(`Overall Homeless`),
+            hmls_multi = mean(`Overall Homeless - Multi-Racial`)/mean(`Overall Homeless`),
+            hmls_NHPI = mean(`Overall Homeless - Native Hawaiian or Other Pacific Islander`)/mean(`Overall Homeless`),
+            hmls_white = mean(`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/mean(`Overall Homeless`),
             pop_AIAN = sum(amer_indian_ak_native)/sum(popest - other_race),
             pop_asian = sum(asian)/sum(popest - other_race),
             pop_black = sum(black)/sum(popest - other_race),
@@ -297,6 +347,12 @@ yyy <- ccc |>
 yyy <- yyy |> 
   pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "mean_sd")
 
+
+
+zzz <- ccc |> 
+  select(coc_num, sd_gap_AIAN, sd_gap_asian, sd_gap_black, sd_gap_multi, sd_gap_NHPI, sd_gap_white) |>
+  pivot_longer(cols = c(sd_gap_AIAN, sd_gap_asian, sd_gap_black, sd_gap_multi, sd_gap_NHPI, sd_gap_white), names_to = "race", values_to = "sd_gap")
+
 # Plot for larger percents: homeless race % - expected race % (sd)
 xxx |>
   ggplot() + 
@@ -305,6 +361,13 @@ xxx |>
 yyy |>
   ggplot() + 
   geom_col(aes(x = race, y = -mean_sd, fill = race))
+
+
+zzz |>
+  ggplot() +
+  geom_density(aes(x = sd_gap, color = race)) + 
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(title = "Gap (Homeless% - Population%) in standard deviations", x = "Gap size in standard deviations")
 
 
 ccc |>
@@ -317,28 +380,179 @@ ccc |>
   ggplot() +
   geom_density(aes(x = hmls_AIAN)) +
   geom_density(aes(x = pop_AIAN), color = "red") +
-  scale_x_log10(label = scales::percent_format())
+  scale_x_continuous(label = scales::percent_format())
 
 ccc |>
   ggplot() +
   geom_density(aes(x = hmls_black)) +
   geom_density(aes(x = pop_black), color = "blue") +
-  scale_x_log10(label = scales::percent_format())
+  scale_x_continuous(label = scales::percent_format())
 
 ccc |>
   ggplot() +
   geom_density(aes(x = hmls_asian)) +
   geom_density(aes(x = pop_asian), color = "turquoise") +
-  scale_x_log10(label = scales::percent_format())
+  scale_x_continuous(label = scales::percent_format())
 
 ccc |>
   ggplot() +
   geom_density(aes(x = hmls_multi)) +
   geom_density(aes(x = pop_multi), color = "green3") +
-  scale_x_log10(label = scales::percent_format())
+  scale_x_continuous(label = scales::percent_format())
 
 ccc |>
   ggplot() +
   geom_density(aes(x = hmls_NHPI)) +
   geom_density(aes(x = pop_NHPI), color = "skyblue1") +
+  scale_x_continuous(label = scales::percent_format())
+
+
+
+
+
+
+
+
+
+
+
+
+# Trying to make scaled gap with percent of homeless population and percent of overall population (I like this less than xxx and yyy)
+
+ooo <- cdat |>
+  group_by(coc_num) |>
+  summarise(total_population = sum(total_pop),
+            total_homeless = mean(`Overall Homeless`),
+            homeless_rate = mean(`Overall Homeless`)/sum(total_pop),
+            hmls_AIAN = mean(`Overall Homeless - American Indian, Alaska Native, or Indigenous`)/mean(`Overall Homeless`),
+            hmls_asian = mean(`Overall Homeless - Asian or Asian American`)/mean(`Overall Homeless`),
+            hmls_black = mean(`Overall Homeless - Black, African American, or African`)/mean(`Overall Homeless`),
+            hmls_multi = mean(`Overall Homeless - Multi-Racial`)/mean(`Overall Homeless`),
+            hmls_NHPI = mean(`Overall Homeless - Native Hawaiian or Other Pacific Islander`)/mean(`Overall Homeless`),
+            hmls_white = mean(`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/mean(`Overall Homeless`),
+            pop_AIAN = sum(amer_indian_ak_native)/sum(popest - other_race),
+            pop_asian = sum(asian)/sum(popest - other_race),
+            pop_black = sum(black)/sum(popest - other_race),
+            pop_multi = sum(multi_racial)/sum(popest - other_race),
+            pop_NHPI = sum(native_hi_other_pi)/sum(popest - other_race),
+            pop_white = sum(white)/sum(popest - other_race)
+  )
+
+ooo <- ooo[-c(371), ]
+
+ooo <- ooo |>
+  mutate(gap_AIAN = hmls_AIAN - pop_AIAN,
+         gap_asian = hmls_asian - pop_asian,
+         gap_black = hmls_black - pop_black,
+         gap_multi = hmls_multi - pop_multi,
+         gap_NHPI = hmls_NHPI - pop_NHPI,
+         gap_white = hmls_white - pop_white
+  )
+
+
+# ooo$pop_NHPI[96] <- 0.00000000000000000000001
+# ooo$pop_NHPI[143] <- 0.00000000000000000000001
+# ooo$pop_NHPI[177] <- 0.00000000000000000000001
+
+ooo <- ooo[-c(177,143,96), ]
+
+
+ooo <- ooo |>
+  mutate(gap_pct_AIAN = gap_AIAN/pop_AIAN,
+         gap_pct_asian = gap_asian/pop_asian,
+         gap_pct_black = gap_black/pop_black,
+         gap_pct_multi = gap_multi/pop_multi,
+         gap_pct_NHPI = gap_NHPI/pop_NHPI,
+         gap_pct_white = gap_white/pop_white)
+
+ppp <- ooo |>
+  summarise(aIAN = median(gap_pct_AIAN),
+            asian = median(gap_pct_asian),
+            black = median(gap_pct_black),
+            multi = median(gap_pct_multi),
+            nHPI = median(gap_pct_NHPI),
+            white = median(gap_pct_white))
+
+ppp <- ppp |> 
+  pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "median_scale_of_diff")
+
+qqq <- ooo |>
+  summarise(aIAN = mean(gap_pct_AIAN),
+            asian = mean(gap_pct_asian),
+            black = mean(gap_pct_black),
+            multi = mean(gap_pct_multi),
+            nHPI = mean(gap_pct_NHPI),
+            white = mean(gap_pct_white))
+
+qqq <- qqq |> 
+  pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "mean_scale_of_diff")
+
+# plots (arrange by value)
+ppp |>
+  ggplot() + 
+  geom_col(aes(x = race, y = -median_scale_of_diff, fill = race))
+
+qqq |>
+  ggplot() + 
+  geom_col(aes(x = race, y = -mean_scale_of_diff, fill = race))
+
+
+
+
+# Add legends, explain density, make things clear
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_white)) +
+  geom_density(aes(x = pop_white), color = "orange") +
+  scale_x_continuous(labels = scales::percent_format())
+
+
+# lower line at same point means there's more observations elsewhere
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_AIAN)) +
+  geom_density(aes(x = pop_AIAN), color = "red") +
+  scale_x_continuous(label = scales::percent_format(),
+                     limits = c(0,0.1))
+
+
+?geom_density
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_black)) +
+  geom_density(aes(x = pop_black), color = "blue") +
+  scale_x_continuous(label = scales::percent_format())
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_asian)) +
+  geom_density(aes(x = pop_asian), color = "turquoise") +
+  scale_x_continuous(label = scales::percent_format())
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_multi)) +
+  geom_density(aes(x = pop_multi), color = "green3") +
+  scale_x_continuous(label = scales::percent_format())
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_NHPI)) +
+  geom_density(aes(x = pop_NHPI), color = "skyblue1") +
   scale_x_log10(label = scales::percent_format())
+
+
+
+ooo |>
+  ggplot() +
+  geom_histogram(aes(x = gap_pct_NHPI)) +
+  scale_x_continuous(labels = scales::percent_format())
+
+
+
+hmmmm <- ooo |>
+  select(coc_num, total_population, total_homeless, hmls_NHPI, pop_NHPI, gap_NHPI, gap_pct_NHPI)
+
