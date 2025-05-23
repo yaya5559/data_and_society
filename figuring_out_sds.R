@@ -1,6 +1,8 @@
 library(tidyverse)
 library(supernova)
 
+coc_data <- read_csv("coc_data.csv")
+
 hud_gis |>
   ggplot() +
   geom_density(aes(x = pct_amer_indian_ak_native)) +
@@ -366,8 +368,12 @@ yyy |>
 zzz |>
   ggplot() +
   geom_density(aes(x = sd_gap, color = race)) + 
-  scale_x_log10(labels = scales::comma_format()) +
+  scale_x_continuous(labels = scales::comma_format(),
+                     limits = c(-1,1)) +
   labs(title = "Gap (Homeless% - Population%) in standard deviations", x = "Gap size in standard deviations")
+
+
+
 
 
 ccc |>

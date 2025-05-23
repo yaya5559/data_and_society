@@ -54,6 +54,16 @@ supernova(income_pop)
 
 
 
+
+
+
+coc_type_pop <- lm(fnd_per_person ~ `CoC Category`, data = hud_gis)
+
+summary(coc_type_pop)
+
+
+
+
 # car::vif (variance inflation factor) suggests multicolinearity (anything over 5 is tipping into multi-co-lin)
 # look into priciple components analysis
 

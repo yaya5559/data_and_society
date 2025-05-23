@@ -415,12 +415,24 @@ cind_cut <- cind |>
          housing_units, 
          permits,
          capacity_housing, 
+         capacity_environment,
+         capacity_transport,
          hud_pbs8, 
          hud_hcv, 
          hud_202, 
          hud_ph, 
          age_under_18, 
-         age_over_64)
+         age_over_64,
+         cnw_500,
+         contaminated_sites,
+         stations_subway,
+         stations_elevated,
+         airports_primary,
+         docks,
+         rail_transit_km,
+         transport_trade_jobs,
+         highway_miles
+  )
 
 cind_cut$GEOID <- as.character(cind_cut$GEOID)
 
@@ -693,8 +705,6 @@ cdat <- mutate(b,
                  public_hsg_cap +
                  s8_project)
 
-# write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
-
 
 
 
@@ -703,6 +713,8 @@ cdat <- mutate(b,
 cdat <- cdat |>
   rename(state_abv = state) |>
   rename(state_full = state.x)
+
+write.csv(cdat, file = "~/Data and Society/data_and_society/county_data_take2.csv")
 
 
 
@@ -811,6 +823,17 @@ cocdat <- cdat |>
             ind_hud_pbs8 = sum(hud_pbs8*total_pop)/sum(total_pop),
             ind_hud_ph = sum(hud_ph*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
+            capacity_environment = sum(capacity_environment*total_pop)/sum(total_pop),
+            capacity_transport = sum(capacity_transport*total_pop)/sum(total_pop),
+            cnw_500 = sum(cnw_500*ALAND)/sum(ALAND),
+            contaminated_sites = sum(contaminated_sites*total_pop)/sum(total_pop),
+            stations_elevated = sum(stations_elevated*total_pop)/sum(total_pop),
+            stations_subway = sum(stations_subway*total_pop)/sum(total_pop),
+            airports_primary = sum(airports_primary*total_pop)/sum(total_pop),
+            docks = sum(docks*total_pop)/sum(AWATER),
+            transport_trade_jobs = sum(transport_trade_jobs*total_pop)/sum(total_pop),
+            rail_transit_km = sum(rail_transit_km*total_pop)/sum(ALAND),
+            highway_miles = sum(highway_miles*total_pop*ALAND)/sum(ALAND),
             pct_under_18 = sum(under18)/sum(popest),
             pct_18_to_24 = sum(age18to24)/sum(popest),
             pct_25_to_34 = sum(age25to34)/sum(popest),
@@ -892,3 +915,4 @@ hud_gis <- stupid_simple_GIS |>
 ### Notes:
 # Regional access point <- look this up (something to do with coordinated entry)
 # Balance of state CoC is managed by department of commerce for each state
+

@@ -6,8 +6,10 @@ library(corrr)
 library(ggcorrplot)
 library(FactoMineR)
 library(factoextra)
+library(Metrics)
+library(pls)
 
-
+cdat <- read_csv("county_data_take2.csv")
 
 cocstuff4pca <- cdat |>
   group_by(coc_num) |>
@@ -80,6 +82,17 @@ cocstuff4pca <- cdat |>
             housing_units = sum(housing_units*total_pop)/sum(total_pop),
             permits = sum(permits*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
+            capacity_environment = sum(capacity_environment*total_pop)/sum(total_pop),
+            capacity_transport = sum(capacity_transport*total_pop)/sum(total_pop),
+            cnw_500 = sum(cnw_500*ALAND)/sum(ALAND),
+            contaminated_sites = sum(contaminated_sites*total_pop)/sum(total_pop),
+            stations_elevated = sum(stations_elevated*total_pop)/sum(total_pop),
+            stations_subway = sum(stations_subway*total_pop)/sum(total_pop),
+            airports_primary = sum(airports_primary*total_pop)/sum(total_pop),
+            docks = sum(docks*total_pop)/sum(AWATER),
+            rail_transit_km = sum(rail_transit_km*total_pop)/sum(ALAND),
+            transport_trade_jobs = sum(transport_trade_jobs*total_pop)/sum(total_pop),
+            highway_miles = sum(highway_miles*total_pop*ALAND)/sum(ALAND),
             median_age = mean(sum(median_age*total_pop)/sum(total_pop)),
             hcv = sum(hcv),
             hud_esg = sum(hud_esg),
@@ -107,6 +120,8 @@ cocstuff4pca <- drop_na(cocstuff4pca)
 
 sapply(cocstuff4pca, class)
 
+too_many_cocs <- cocstuff4pca
+
 cocstuff4pca <- cocstuff4pca |>
   select(-coc_num)
 
@@ -121,57 +136,318 @@ cocstuff4pca <- cocstuff4pca |>
 coc_pca1 <- cocstuff4pca |>
   select(med_hh_income,
          housing_units,
+         # capacity_environment,
+         capacity_transport,
+         airports_primary,
+         rail_transit_km,
+         docks,
          # capacity_housing,
+         # total_population,
+         # total_homeless,
+         # AWATER,
          employment_access_index,
          overcrowded_housing,
          # housing_cost_burden,
          vacancy_rate,
          poverty_rate,
          percent_poc,
-         # pop_hisp_latx,
+         pop_hisp_latx,
          pop_white,
          pop_density,
-         # incomplete_kitchen,
-         # incomplete_plumbing,
-         #homeless_rate,
+         incomplete_kitchen,
+         incomplete_plumbing,
+         homeless_rate,
          # chronic_hmls,
-         # ppl_in_families_hmls,
+         ppl_in_families_hmls,
          # disadvantaged_county,
          # persistent_poverty_county,
          median_age,
-         # pop_under_18,
-         pop_over_64)
-
-
+         pop_under_18,
+         pop_over_64,
+         pop_asian,
+         percent_urban,
+         pop_black,
+         parenting_yth_hmls,
+         # individual_hmls,
+         veteran_hmls,
+         # cnw_500,
+         contaminated_sites,
+         pop_AIAN,
+         # pop_NHPI,
+         # stations_subway,
+         # stations_elevated
+         )
 
 
 
 # standardize/normalize everything
-
 coc_pca1 <- scale(coc_pca1)
 
 
-
-
-
-
-
 # actually do principal components analysis
-
 out_coc <- princomp(coc_pca1)
-
 summary(out_coc)
-
 out_coc$loadings[, 1:4]
 
-
 fviz_eig(out_coc, addlabels = TRUE)
-
 fviz_pca_var(out_coc, col.var = "black")
-
 fviz_cos2(out_coc, choice = "var", axes = 1:2)
-
 fviz_pca_var(out_coc, col.var = "cos2",
              gradient.cols = c("black", "orange", "green"),
              repel = TRUE)
+
+
+barplot(out_coc$loadings[,1], main = "")
+barplot(out_coc$loadings[,2], main = "")
+barplot(out_coc$loadings[,3], main = "")
+barplot(out_coc$loadings[,4], main = "")
+
+help <- lm(fnd_per_person ~ out_coc$scores[, 1:4], data = cocstuff4pca)
+
+summary(help)
+supernova(help)
+
+
+
+
+
+# Correlation testing variables for fnd_per_person
+
+list_data <- data.frame()
+
+list_data <- data.frame(sapply(names(cocstuff4pca), function(x) 
+  cor.test(cocstuff4pca[[x]], cocstuff4pca$fnd_per_person, use="pairwise.complete.obs")))
+
+data_list <- data.frame()
+data_list <- data.frame(t(list_data))
+
+
+
+# estimates of more than |0.20| (for predicting fnd_per_person)
+
+
+###### This one
+
+coc_pca3 <- cocstuff4pca |>
+  select(pop_density,
+         employment_access_index,
+         rail_transit_km,
+         pop_black,
+         # docks,
+         # stations_subway,
+         poverty_rate,
+         # stations_elevated,
+         capacity_transport,
+         # permits,
+         pop_AIAN,
+         # pop_asian,
+         pop_white,
+         pop_under_18,
+         # pop_25_to_34,
+         # pop_35_to_44,
+         # pop_55_to_64,
+         pop_over_64,
+         # ALAND,
+         # percent_rural,
+         # percent_poc,
+         # pop_female,
+         # incomplete_kitchen,
+         transport_trade_jobs)
+
+out_coc3 <- princomp(coc_pca3)
+
+summary(out_coc3)
+
+out_coc3$loadings[, 1:3]
+
+
+
+
+fviz_eig(out_coc3, addlabels = TRUE)
+
+fviz_pca_var(out_coc3, col.var = "black")
+
+fviz_cos2(out_coc3, choice = "var", axes = 1:2)
+
+fviz_pca_var(out_coc3, col.var = "cos2",
+             gradient.cols = c("black", "orange", "green"),
+             repel = TRUE)
+
+
+
+barplot(out_coc3$loadings[,1], main = "")
+barplot(out_coc3$loadings[,2], main = "")
+barplot(out_coc3$loadings[,3], main = "")
+barplot(out_coc3$loadings[,4], main = "")
+
+
+help3 <- lm(fnd_per_person ~ out_coc3$scores[, 1:3], data = cocstuff4pca)
+
+summary(help3)
+supernova(help3)
+
+
+sss <- lm(fnd_per_person ~ rail_transit_km + employment_access_index + pop_black + docks + pop_density + capacity_transport, data = cocstuff4pca)
+
+summary(sss)
+supernova(sss)
+
+
+
+sss <- lm(fnd_per_person ~ employment_access_index + rail_transit_km, data = cocstuff4pca)
+
+summary(sss)
+supernova(sss)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# for predicting homeless_rate
+cor_hmls <- data.frame()
+
+cor_hmls <- data.frame(sapply(names(cocstuff4pca), function(x) 
+  cor.test(cocstuff4pca[[x]], cocstuff4pca$homeless_rate, use="pairwise.complete.obs")))
+
+cor_hmls <- data.frame(t(cor_hmls))
+
+# estimates of more than |0.10| (for predicting homeless_rate)
+
+coc_pca4 <- cocstuff4pca |>
+  select(pop_AIAN,
+pop_asian,
+pop_black,
+pop_multi,
+pop_NHPI,
+pop_white,
+pop_under_18,
+pop_25_to_34,
+pop_35_to_44,
+pop_45_to_54,
+pop_55_to_64,
+pop_over_64,
+pop_male,
+pop_hisp_latx,
+poverty_rate,
+pop_density,
+# housing_cost_burden,
+# overcrowded_housing,
+# incomplete_plumbing,
+cnw_500,
+contaminated_sites,
+# stations_subway
+)
+
+
+out_coc4 <- princomp(coc_pca4)
+
+summary(out_coc4)
+
+out_coc3$loadings[, 1:6]
+
+
+
+
+fviz_eig(out_coc4, addlabels = TRUE)
+
+fviz_pca_var(out_coc4, col.var = "black")
+
+fviz_cos2(out_coc4, choice = "var", axes = 1:2)
+
+fviz_pca_var(out_coc4, col.var = "cos2",
+             gradient.cols = c("black", "orange", "green"),
+             repel = TRUE)
+
+
+
+barplot(out_coc4$loadings[,1], main = "")
+barplot(out_coc4$loadings[,2], main = "")
+barplot(out_coc4$loadings[,3], main = "")
+barplot(out_coc4$loadings[,4], main = "")
+
+
+help4 <- lm(fnd_per_person ~ out_coc4$scores[, 1:3], data = cocstuff4pca)
+
+summary(help4)
+supernova(help4)
+
+
+sss <- lm(fnd_per_person ~ rail_transit_km + employment_access_index + pop_black + docks + pop_density + capacity_transport, data = cocstuff4pca)
+
+summary(sss)
+supernova(sss)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Race PCA
+
+coc_pca2 <- cocstuff4pca |>
+  select(pop_asian,
+         pop_AIAN,
+         pop_black,
+         pop_multi,
+         pop_NHPI,
+         pop_white
+  )
+
+
+# standardize/normalize everything
+coc_pca2 <- scale(coc_pca2)
+
+# actually do principal components analysis
+out_coc2 <- princomp(coc_pca2)
+
+summary(out_coc2)
+out_coc2$loadings[, 1:6]
+
+
+fviz_eig(out_coc2, addlabels = TRUE)
+fviz_pca_var(out_coc2, col.var = "black")
+fviz_cos2(out_coc2, choice = "var", axes = 1:2)
+fviz_pca_var(out_coc2, col.var = "cos2",
+             gradient.cols = c("black", "orange", "green"),
+             repel = TRUE)
+
+
+
+barplot(out_coc2$loadings[,1], main = "")
+barplot(out_coc2$loadings[,2], main = "")
+barplot(out_coc2$loadings[,3], main = "")
+barplot(out_coc2$loadings[,4], main = "")
+
+barplot(out_coc2$loadings[1,], main = "")
+
+
+help2 <- lm(fnd_per_person ~ out_coc2$scores[, 1:4], data = cocstuff4pca)
+
+summary(help2)
+supernova(help2)
+
+
+
+
 

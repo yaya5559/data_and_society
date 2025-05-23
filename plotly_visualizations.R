@@ -5,6 +5,7 @@ library(rmapshaper)
 library(scales)
 library(weights)
 
+
 coc_data <- read_csv("coc_data.csv")
 
 GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
@@ -746,6 +747,111 @@ p32 <- hud_gis |>
   theme(axis.text.x = element_text(angle = 45))
 
 ggplotly(p32, tooltip = "text")
+
+
+
+# homeless women map
+
+p33 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill =`Overall Homeless - Woman`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Homeless people - women: ', round(`Overall Homeless - Woman`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("lightblue", "maroon4"),
+                       name = "% of Homeless People Who Are Women",
+                       labels = scales::percent_format())
+
+ggplotly(p33, tooltip = "text") |>
+  style(hoveron = "fills")  
+
+
+
+# Trying to do a binned map of some sort
+
+hud_gis <- hud_gis |>
+  mutate(hmls_female = `Overall Homeless - Woman`/ `Overall Homeless`,
+         hmls_male = `Overall Homeless - Man`/`Overall Homeless`,
+         hmls_trans = `Overall Homeless - Transgender`/`Overall Homeless`,
+         hmls_nonbi = `Overall Homeless - Non Binary`/`Overall Homeless`,
+         hmls_cultural_id = `Overall Homeless - Culturally Specific Identity`/`Overall Homeless`,
+         hmls_gender_questioning = `Overall Homeless - Gender Questioning`/`Overall Homeless`,
+         hmls_more_than_1_gend = `Overall Homeless - More Than One Gender`/`Overall Homeless`,
+         hmls_other_gend = `Overall Homeless - Different Identity`/`Overall Homeless`)
+
+my_cutpoints <- c(0.25, 0.30, 0.35, 0.40, 0.45, 0.49, 0.51, 0.55, 0.60, 0.65, 0.70, 0.75)
+my_labels <- c(">75% Women", "70-75% Women", "65-70% Women", "60-65% Women", "55-60% Women", "51-55% Women",
+               "50/50% Split", "51-55% Men", "55-60% Men", "60-65% Men", "65-70% Men", "70-75% Men", ">75% Men")
+my_colors <- c("#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#f5f5f5", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30")
+
+length(my_cutpoints)
+length(my_labels)
+length(my_colors)
+
+hud_gis <- hud_gis |>
+  mutate(gender_scale = cut(hmls_male, breaks = my_cutpoints, labels = my_labels))
+
+
+
+
+
+p34 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = gender_scale,
+              text = paste(coc_name,
+                           '<br>Homeless Population: ', round(hmls_male*100, digits = 3), "% Men",
+                           '<br>                     ', round(hmls_female*100, digits = 3), "% Women"))) +
+  scale_fill_manual("", values = my_colors)
+
+ggplotly(p34, tooltip = "text") |>
+  style(hoveron = "fills")  
+
+
+
+
+
+
+p35 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = hmls_male,
+              text = paste(coc_name,
+                           '<br>Homeless Population: ', round(hmls_male*100, digits = 3), "% Men",
+                           '<br>                     ', round(hmls_female*100, digits = 3), "% Women"))) +
+  scale_fill_gradientn(name = "",
+                    colors = c("#543005", "#bf812d", "#f6e8c3", "#f5f5f5", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30"),
+                    limits = c(0.35,0.75),
+  )
+
+ggplotly(p35, tooltip = "text") |>
+  style(hoveron = "fills") 
+
+
+
+
+# homeless trans map
+
+p36 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill =`Overall Homeless - Transgender`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Homeless people - transgender: ', round(`Overall Homeless - Transgender`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#ffe0d0", "#11408a"),
+                       name = "% of Homeless People Who Are Transgender",
+                       labels = scales::percent_format(),
+                       limits = c(0,0.02))
+
+ggplotly(p36, tooltip = "text") |>
+  style(hoveron = "fills")  
+
+
+
+
+
+
+
 
 
 
