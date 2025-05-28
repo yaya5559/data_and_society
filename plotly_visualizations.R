@@ -4,7 +4,7 @@ library(sf)
 library(rmapshaper)
 library(scales)
 library(weights)
-
+library(htmlwidgets)
 
 coc_data <- read_csv("coc_data.csv")
 
@@ -850,9 +850,21 @@ ggplotly(p36, tooltip = "text") |>
 
 
 
+p37 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = (funding_tot/(total_population)),
+              text = paste(coc_name,
+                           '<br>Funding per person: $', round(funding_tot/(poverty_rate*total_population), digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Funding per Person")
 
 
+i<-ggplotly(p37, tooltip = "text") |>
+  style(hoveron = "fills")
 
+i
 
 
 "#ff704c", "#115b8a"
