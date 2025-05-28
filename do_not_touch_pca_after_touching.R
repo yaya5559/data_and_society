@@ -152,14 +152,15 @@ coc_pca3 <- cocstuff4pca |>
   select(
     # total_population,
          med_hh_income,
+         homeless_rate,
          overcrowded_housing,
-         # pop_AIAN,
+         pop_AIAN,
          # pop_asian,
          pop_black,
          # pop_multi,
          # pop_NHPI,
          pop_white,
-         pop_hisp_latx,
+         # pop_hisp_latx,
          pop_under_18,
          # pop_25_to_34,
          # pop_35_to_44,
@@ -168,13 +169,13 @@ coc_pca3 <- cocstuff4pca |>
          pop_over_64,
          pop_density,
          # pop_female,
-         employment_access_index,
-         rail_transit_km,
+         # employment_access_index,
+         # rail_transit_km,
          # docks,
          # stations_subway,
          poverty_rate,
          # stations_elevated,
-         capacity_transport,
+         # capacity_transport,
          housing_cost_burden,
          # permits,
          # ALAND,
@@ -182,6 +183,7 @@ coc_pca3 <- cocstuff4pca |>
          # percent_poc,
          # incomplete_kitchen,
          # cnw_500,
+         # AWATER,
          housing_units,
          # transport_trade_jobs
          )
@@ -198,7 +200,7 @@ out_coc3 <- princomp(coc_pca3)
 
 summary(out_coc3)
 
-out_coc3$loadings[, 1:4]
+out_coc3$loadings[, 1:7]
 
 
 
@@ -215,17 +217,17 @@ fviz_pca_var(out_coc3, col.var = "cos2",
 
 
 
-barplot(out_coc3$loadings[,1], main = "")    # Not white, urban (smaller city, not huge metro area)
-barplot(out_coc3$loadings[,2], main = "")    # Young, suburban, latino
-barplot(out_coc3$loadings[,3], main = "")    # Black, not latina, high poverty, near water
-barplot(out_coc3$loadings[,4], main = "")    # Large population, near water, white, wealthy
+barplot(out_coc3$loadings[,1], main = "")    # Not white, not old, urban-ish (few hsng units)
+barplot(out_coc3$loadings[,2], main = "")    # Affluent
+barplot(out_coc3$loadings[,3], main = "")    # Older, hsng cost burden, mild overcrowding
+barplot(out_coc3$loadings[,4], main = "")    # Large-ish population, not AIAN, black, dense pop
 barplot(out_coc3$loadings[,5], main = "")    # High poverty rate, AIAN, near water, lots of transit people
-barplot(out_coc3$loadings[,6], main = "")    # latx, old
-barplot(out_coc3$loadings[,7], main = "")    # not Asian
+barplot(out_coc3$loadings[,6], main = "")    # low pop density, high hsng burden, low AIAn
+barplot(out_coc3$loadings[,7], main = "")    # low overcrowded housing rate, high hmls rate
 
 
 
-help3 <- lm(fnd_per_person ~ out_coc3$scores[, 1:4], data = cocstuff4pca)
+help3 <- lm(fnd_per_person ~ out_coc3$scores[, 1:7], data = cocstuff4pca)
 
 summary(help3)
 supernova(help3)
@@ -367,6 +369,7 @@ coc_pca3 <- cocstuff4pca |>
          # incomplete_kitchen,
          cnw_500,
          # transport_trade_jobs
+  )
          
          
          
@@ -402,4 +405,4 @@ coc_pca3 <- cocstuff4pca |>
                   cnw_500,
                   # transport_trade_jobs
            )
-  )
+  
