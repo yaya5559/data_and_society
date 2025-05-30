@@ -65,8 +65,8 @@ cocstuff4pca <- cdat |>
             pop_male = sum(male)/sum(popest),
             pop_hisp_latx = sum(hispaniclatinx)/sum(popest),
             pop_non_hisp_latx = sum(non_hispaniclatinx)/sum(popest),
-            AWATER = sum(AWATER),
-            ALAND = sum(ALAND),
+            # AWATER = sum(AWATER),
+            # ALAND = sum(ALAND),
             disadvantaged_county = mean(disadvantaged_county),
             persistent_poverty_county = mean(persistent_poverty_county),
             percent_rural = sum(percent_rural*ALAND)/sum(ALAND),
@@ -84,10 +84,10 @@ cocstuff4pca <- cdat |>
             incomplete_kitchen = sum(incomplete_kitchen*total_pop)/sum(total_pop),
             housing_units = sum(housing_units*total_pop)/sum(total_pop),
             # permits = sum(permits*total_pop)/sum(total_pop),
-            capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
-            capacity_environment = sum(capacity_environment*total_pop)/sum(total_pop),
-            capacity_transport = sum(capacity_transport*total_pop)/sum(total_pop),
-            cnw_500 = sum(cnw_500*ALAND)/sum(ALAND),
+            # capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
+            # capacity_environment = sum(capacity_environment*total_pop)/sum(total_pop),
+            # capacity_transport = sum(capacity_transport*total_pop)/sum(total_pop),
+            # cnw_500 = sum(cnw_500*ALAND)/sum(ALAND),
             contaminated_sites = sum(contaminated_sites*total_pop)/sum(total_pop),
             stations_elevated = sum(stations_elevated*total_pop)/sum(total_pop),
             stations_subway = sum(stations_subway*total_pop)/sum(total_pop),
@@ -111,6 +111,7 @@ cocstuff4pca <- cdat |>
 cocstuff4pca <- cocstuff4pca[-c(371), ]
 
 colSums(is.na(cocstuff4pca))
+temp <- filter(cocstuff4pca, rowSums(is.na(cocstuff4pca))>0)
 
 cocstuff4pca <- drop_na(cocstuff4pca)
 
@@ -215,15 +216,20 @@ fviz_pca_var(out_coc3, col.var = "cos2",
              gradient.cols = c("black", "orange", "green"),
              repel = TRUE)
 
+fviz_pca_var(out_coc3, col.var = "cos2",
+             axes = c(4,5),
+             gradient.cols = c("black", "orange", "green"),
+             repel = TRUE)
 
+?fviz_pca_var
 
-barplot(out_coc3$loadings[,1], main = "")    # Not white, not old, urban-ish (few hsng units)
-barplot(out_coc3$loadings[,2], main = "")    # Affluent
-barplot(out_coc3$loadings[,3], main = "")    # Older, hsng cost burden, mild overcrowding
-barplot(out_coc3$loadings[,4], main = "")    # Large-ish population, not AIAN, black, dense pop
-barplot(out_coc3$loadings[,5], main = "")    # High poverty rate, AIAN, near water, lots of transit people
-barplot(out_coc3$loadings[,6], main = "")    # low pop density, high hsng burden, low AIAn
-barplot(out_coc3$loadings[,7], main = "")    # low overcrowded housing rate, high hmls rate
+barplot(out_coc3$loadings[,1], main = "")    # High score = Not white, not old, (suburban), low = urban
+barplot(out_coc3$loadings[,2], main = "")    # High = high income, low = low income
+barplot(out_coc3$loadings[,3], main = "")    # High = homeless, overcrowded, older, (metro), low = flyover state
+barplot(out_coc3$loadings[,4], main = "")    # High = few AIAN, low = American Indian (lots)
+barplot(out_coc3$loadings[,5], main = "")    # High = High housing cost burden, low population density, low = High population density or AIAN
+barplot(out_coc3$loadings[,6], main = "")    # High = low pop density, high hsng burden, AIAN, low = white, high density, low housing burden, or homeless
+barplot(out_coc3$loadings[,7], main = "")    # High = high homeless rates, vacant houses, low = low homeless rate, crowded houses
 
 
 
@@ -249,6 +255,122 @@ ggplot(cocstuff4pca) +
   scale_y_continuous(labels = scales::comma_format(prefix = "$"))
 
 
+too_many_cocs$pc1 <- out_coc3$scores[,1]
+too_many_cocs$pc2 <- out_coc3$scores[,2]
+too_many_cocs$pc3 <- out_coc3$scores[,3]
+too_many_cocs$pc4 <- out_coc3$scores[,4]
+too_many_cocs$pc5 <- out_coc3$scores[,5]
+too_many_cocs$pc6 <- out_coc3$scores[,6]
+too_many_cocs$pc7 <- out_coc3$scores[,7]
+
+
+
+
+thingy <- stupid_simple_GIS |>
+  left_join(too_many_cocs, by = c("COCNUM" = "coc_num"))
+
+thingy <- thingy |>
+  left_join(coc_data, by = c("COCNUM" = "coc_num"))
+
+thingy <- sf::st_cast(thingy, "MULTIPOLYGON")
+
+x1 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc1,
+              text = paste(coc_name,
+                           '<br>Pc1 score: ', round(pc1, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#f03b20", "#fd8d3c", "#fecc5c", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8"),
+                       name = "Pc1 score")
+
+
+ggplotly(x1, tooltip = "text") |>
+  style(hoveron = "fills") 
+
+
+
+x2 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc2,
+              text = paste(coc_name,
+                           '<br>Pc2 score: ', round(pc2, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#a1dab4", "#ffffcc", "#fecc5c", "#fd8d3c", "#f03b20"),
+                       name = "Pc2 score",
+                       limits = c(-5,5))
+
+ggplotly(x2, tooltip = "text") |>
+  style(hoveron = "fills") 
+
+
+
+
+x3 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc3,
+              text = paste(coc_name,
+                           '<br>Pc3 score: ', round(pc3, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#feb24c", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8"),
+                       name = "Pc3 score")
+
+ggplotly(x3, tooltip = "text") |>
+  style(hoveron = "fills") 
+
+
+
+x4 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc4,
+              text = paste(coc_name,
+                           '<br>Pc4 score: ', round(pc4, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#f3330c", "#fd8d3c", "#fecc5c", "#ffffcc", "#7fcdbb", "#1d91c0"),
+                       name = "Pc4 score")
+
+ggplotly(x4, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+x5 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc5,
+              text = paste(coc_name,
+                           '<br>Pc5 score: ', round(pc5, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#f3330c", "#fd8d3c", "#fecc5c", "#ffffcc", "#41b6c4"),
+                       name = "Pc5 score")
+
+ggplotly(x5, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+x6 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc6,
+              text = paste(coc_name,
+                           '<br>Pc6 score: ', round(pc6, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#ffffcc", "#fecc5c", "#f3330c"),
+                       name = "Pc6 score")
+
+ggplotly(x6, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+x7 <- thingy |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = pc7,
+              text = paste(coc_name,
+                           '<br>Pc7 score: ', round(pc7, digits = 3)))) +
+  scale_fill_gradientn(colours = c("#f3330c", "#fecc5c", "#ffffcc", "#41b6c4", "#225ea8"),
+                       name = "Pc7 score")
+
+ggplotly(x7, tooltip = "text") |>
+  style(hoveron = "fills")
 
 
 

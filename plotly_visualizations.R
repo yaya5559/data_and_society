@@ -342,16 +342,37 @@ ggplotly(p14, tooltip = "text") |>
 p15 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = `Overall Homeless - Hispanic/Latina/e/o` / `Overall Homeless`,
+  geom_sf(aes(fill = `Overall Homeless - Black, African American, or African` / `Overall Homeless`,
               text = paste(coc_name,
-                           '<br>Percent of people in coc who identify as Hispanic: ', round(`Overall Homeless - Hispanic/Latina/e/o`/`Overall Homeless`*100, digits = 3), "%"))) +
+                           '<br>Percent of people in coc who identify as Black: ', round(`Overall Homeless - Black, African American, or African`/`Overall Homeless`*100, digits = 3), "%"))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "pink3", "purple"),
                        labels = scales::percent_format(),
-                       name = "Share of homeless <br>population that <br>idenifies as hispanic")
+                       name = "Share of homeless <br>population that <br>idenifies as Black")
 
 ggplotly(p15, tooltip = "text") |>
   style(hoveron = "fills")
+
+
+# % of homeless people race map
+
+p15 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Black, African American, or African`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as Black: ', round(`Overall Homeless - Black, African American, or African`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "pink3", "purple"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as Black")
+
+ggplotly(p15, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+
 
   
   
@@ -861,10 +882,9 @@ p37 <- hud_gis |>
                        name = "Funding per Person")
 
 
-i<-ggplotly(p37, tooltip = "text") |>
+ggplotly(p37, tooltip = "text") |>
   style(hoveron = "fills")
 
-i
 
 
 "#ff704c", "#115b8a"
