@@ -376,13 +376,13 @@ ggplotly(p15, tooltip = "text") |>
 p15 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = `Overall Homeless - Black, African American, or African`/`Overall Homeless`,
+  geom_sf(aes(fill = pct_black,
               text = paste(coc_name,
-                           '<br>Percent of people in coc who identify as Black: ', round(`Overall Homeless - Black, African American, or African`/`Overall Homeless`*100, digits = 3), "%"))) +
+                           '<br>Percent of people in coc who identify as Black: ', round(pct_black*100, digits = 3), "%"))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "pink3", "purple"),
                        labels = scales::percent_format(),
-                       name = "Share of homeless <br>population that <br>idenifies as Black")
+                       name = "Share of population<br>that idenifies as Black")
 
 ggplotly(p15, tooltip = "text") |>
   style(hoveron = "fills")
@@ -947,6 +947,30 @@ p37 <- hud_gis |>
 
 ggplotly(p37, tooltip = "text") |>
   style(hoveron = "fills")
+
+
+
+
+
+
+# Housing cost burden map
+
+p38 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = housing_cost_burden,
+              text = paste(coc_name,
+                           '<br>Housing cost burden: ', round((housing_cost_burden)*100, digits = 2), "%"))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Housing Cost Burden",
+                       labels = scales::percent_format())
+
+ggplotly(p38, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
 
 
 

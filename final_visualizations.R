@@ -20,6 +20,27 @@ ggplotly(p25, tooltip = "text") |>
   style(hoveron = "fills")
 
 
+#$/ person map (same scale as $/homeless map)
+
+p7 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = fnd_per_person,
+              text = paste(coc_name,
+                           '<br>Funding per person: $', round(fnd_per_person), digits = 2))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       labels = scales::comma_format(prefix = "$"),
+                       name = "Funding per Person"
+  )
+
+ggplotly(p7, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+
+
 # Median HH income
 
 p27 <- hud_gis |>
@@ -40,22 +61,6 @@ ggplotly(p27, tooltip = "text") |>
 
 
 
-#$/ person map (same scale as $/homeless map)
-
-p7 <- hud_gis |>
-  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
-  ggplot() +
-  geom_sf(aes(fill = fnd_per_person,
-              text = paste(coc_name,
-                           '<br>Funding per person: $', round(fnd_per_person), digits = 2))) +
-  scale_fill_gradientn(transform = "log10",
-                       colours = c("lightgrey", "orange2", "blue4"),
-                       labels = scales::comma_format(prefix = "$"),
-                       name = "Funding per Person"
-  )
-
-ggplotly(p7, tooltip = "text") |>
-  style(hoveron = "fills")
 
 
 
