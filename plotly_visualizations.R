@@ -20,12 +20,6 @@ hud_gis <- stupid_simple_GIS |>
 
 hud_gis <- sf::st_cast(hud_gis, "MULTIPOLYGON")
 
-hud_gis <- hud_gis |>
-  mutate(fnd_per_impov = funding_tot/(poverty_rate*total_population),
-         fnd_per_person = funding_tot/total_population,
-         fnd_per_hmls = funding_tot/`Overall Homeless`,
-         homeless_rate = `Overall Homeless`/total_population)
-
 
 
 
@@ -169,19 +163,18 @@ ggplotly(p6, tooltip = "text")
 
 
 
-# $/impoverished person map (same scale as $/homeless map)
+# $/ person map (same scale as $/homeless map)
 
 p7 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = log10(funding_tot/(poverty_rate*total_population)),
+  geom_sf(aes(fill = fnd_per_person,
               text = paste(coc_name,
-                           '<br>Funding per impoverished person: $', round(funding_tot/(poverty_rate*total_population), digits = 2)))) +
+                           '<br>Funding per person: $', round(fnd_per_person), digits = 2))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "orange2", "blue4"),
-                       limits = c(2, 6.01), breaks = c(2, 3, 4, 5, 6),
-                       labels = c("$100", "$1,000", "$10,000", "$100,000", "$1,000,000"),
-                       name = "Funding per Impoverished Person"
+                       labels = scales::comma_format(prefix = "$"),
+                       name = "Funding per Person"
                        )
 
 ggplotly(p7, tooltip = "text") |>
@@ -313,8 +306,32 @@ p13 <- hud_gis |>
   scale_y_log10(labels = scales::percent_format()) +
   labs(title = "Homeless Rate by Poverty Rate", x = "Share of People Living Below Federal Poverty Line (%)", 
        y = "Homelessness Rate (%)") 
+# +  geom_smooth(aes(x = poverty_rate, y = `Overall Homeless`/total_population))
 
 ggplotly(p13, tooltip = "text")
+
+
+
+
+
+p13a <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = overcrowded_housing, y = `Overall Homeless`/total_population, color = vacancy_rate,
+                  text = paste(coc_name,
+                               '<br>Houses with 2 or more occupants per room: ', round(overcrowded_housing*100, digits = 3), "%",
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%',
+                               '<br>Vacancy rate: ', round(vacancy_rate, digits = 3), "%"))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Vacancy Rate") +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::percent_format()) +
+  labs(title = "Homeless Rate by Poverty Rate", x = "Share of Houses With 2 or More Occupants per Room (%)", 
+       y = "Homelessness Rate (%)") 
+# +
+  # geom_smooth(aes(x = overcrowded_housing, y = `Overall Homeless`/total_population))
+
+ggplotly(p13a, tooltip = "text")
+
 
 
 
@@ -327,7 +344,7 @@ p14 <- hud_gis |>
   geom_sf(aes(fill = poverty_rate,
               text = paste(coc_name,
                            '<br>Share of People Below Poverty Line: ', round(poverty_rate*100, digits = 3), "%"))) +
-  scale_fill_gradientn(colours = c("lightblue", "maroon4"),
+  scale_fill_gradientn(colours = c("lightblue1", "maroon4"),
                        labels = scales::percent_format(),
                        name = "Poverty Rate")
 
@@ -400,7 +417,7 @@ p17 <- hud_gis |>
   geom_sf(aes(fill = `Total Year-Round Beds (ES, TH, SH)`/`Overall Homeless`,
               text = paste(coc_name,
                            '<br>Year-round beds available in shelters: ', round(`Total Year-Round Beds (ES, TH, SH)`/`Overall Homeless`, digits = 3)))) +
-  scale_fill_gradientn(colours = c("maroon4", "lightblue"),
+  scale_fill_gradientn(colours = c("maroon4", "lightblue1"),
                        name = "Beds per Homeless Individual")
 
 ggplotly(p17, tooltip = "text") |>
@@ -422,8 +439,8 @@ p18 <- hud_gis |>
   scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
                         name = "Overcrowded Housing (%)",
                         labels = scales::percent_format()) +
-  scale_x_log10() +
-  scale_y_log10() +
+  scale_x_continuous() +
+  scale_y_continuous() +
   labs(title = "Housing Units per Person and Shelter Beds per Homeless Individual", x = "Housing Units (Houses/Apartments) per Person in CoC", 
        y = "Shelter Beds Available Year-Round per Homeless Person in CoC") 
 
@@ -442,7 +459,7 @@ p19 <- hud_gis |>
               text = paste(coc_name,
                            '<br>Homeless people that are chronically homeless: ', round(`Overall Chronically Homeless`/`Overall Homeless`*100, digits = 3), "%"))) +
   scale_fill_gradientn(colours = c("lightblue", "maroon4"),
-                       name = "Experienceing Chronic Homelessness",
+                       name = "Experienceing Chronic<br>Homelessness",
                        labels = scales::percent_format())
 
 ggplotly(p19, tooltip = "text") |>
@@ -572,8 +589,10 @@ p25 <- hud_gis |>
   geom_sf(aes(fill = `Overall Homeless`/total_population,
               text = paste(coc_name,
                            '<br>Homeless rate: ', round((`Overall Homeless`/total_population)*100, digits = 2), "%"))) +
-  scale_fill_gradientn(colours = c("lightgrey", "orange2", "blue4"),
-                       name = "Homeless Rate")
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Homeless Rate",
+                       labels = scales::percent_format())
 
 ggplotly(p25, tooltip = "text") |>
   style(hoveron = "fills")
@@ -585,21 +604,22 @@ ggplotly(p25, tooltip = "text") |>
 
 
 
-p25 <- hud_gis |>
+p25a <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
   geom_sf(aes(fill = total_population,
               text = paste(coc_name,
-                           '<br>POP: ', round((total_population), digits = 2)))) +
+                           '<br>Total Population: ', round((total_population), digits = 2)))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "orange2", "blue4"),
-                       name = "Pop")
+                       name = "Total<br>Population",
+                       labels = scales::comma_format())
 
-ggplotly(p25, tooltip = "text") |>
+ggplotly(p25a, tooltip = "text") |>
   style(hoveron = "fills")
 
 
-p25 <- hud_gis |>
+p25b <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
   geom_sf(aes(fill = funding_tot,
@@ -607,19 +627,22 @@ p25 <- hud_gis |>
                            '<br>Fnd: ', round((funding_tot), digits = 2)))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "orange2", "blue4"),
-                       name = "Fnd")
+                       name = "Total<br>Funding<br>(USD)",
+                       labels = scales::comma_format(prefix = "$"))
 
-ggplotly(p25, tooltip = "text") |>
+ggplotly(p25b, tooltip = "text") |>
   style(hoveron = "fills")
 
 
 
+# Age over 64
+
 p26 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = age_over_64,
+  geom_sf(aes(fill = pct_over_64,
               text = paste(coc_name,
-                           '<br>Population over 64: ', round((age_over_64*100), digits = 2), "%"))) +
+                           '<br>Population over 64: ', round((pct_over_64*100), digits = 2), "%"))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "orange2", "blue4"),
                        name = "Share of Population<br>Over 64",
@@ -630,6 +653,8 @@ ggplotly(p26, tooltip = "text") |>
 
 
 
+
+# Median age
 
 p27 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
@@ -646,6 +671,23 @@ ggplotly(p27, tooltip = "text") |>
 
 
 
+# Median HH income
+
+p27 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = med_hh_income,
+              text = paste(coc_name,
+                           '<br>Median Household Income: $', round(med_hh_income, digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Median Household<br>Income",
+                       labels = scales::comma_format(prefix = "$"))
+
+ggplotly(p27, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
 
 
 
@@ -654,9 +696,9 @@ ggplotly(p27, tooltip = "text") |>
 p28 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = (`Overall Homeless - Hispanic/Latina/e/o`/total_population) - pct_hispanic_latinx,
+  geom_sf(aes(fill = ((`Overall Homeless - Hispanic/Latina/e/o` / `Overall Homeless`) - pct_hispanic_latinx) / pct_hispanic_latinx,
               text = paste(coc_name,
-                           '<br>Homeless Hispanic/Latinx: ', round(((`Overall Homeless - Hispanic/Latina/e/o`/total_population) - pct_hispanic_latinx)*100, digits = 2), "%"))) +
+                           '<br>Homeless Hispanic/Latinx: ', round((((`Overall Homeless - Hispanic/Latina/e/o` / `Overall Homeless`) - pct_hispanic_latinx) / pct_hispanic_latinx)*100, digits = 2), "%"))) +
   scale_fill_gradientn(colours = c("lightgrey", "orange2", "blue4"),
                        name = "Homeless Hispanic/Latinx",
                        labels = percent_format())
@@ -673,11 +715,11 @@ ggplotly(p28, tooltip = "text") |>
 p29 <- hud_gis |>
   filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
   ggplot() +
-  geom_sf(aes(fill = (`Overall Homeless - Black, African American, or African`/total_population) - pct_black,
+  geom_sf(aes(fill = ((`Overall Homeless - Black, African American, or African` / `Overall Homeless`) - pct_black) / pct_black,
               text = paste(coc_name,
-                           '<br>Homeless Hispanic/Latinx: ', round(((`Overall Homeless - Black, African American, or African`/total_population) - pct_black)*100, digits = 2), "%"))) +
+                           '<br>Homeless Black: ', round((((`Overall Homeless - Black, African American, or African` / `Overall Homeless`) - pct_black) / pct_black)*100, digits = 2), "%"))) +
   scale_fill_gradientn(colours = c("lightgrey", "orange2", "blue4"),
-                       name = "Homeless Hispanic/Latinx",
+                       name = "Disparity between percent<br>of underlying population<br>and homeless population<br>(Black)",
                        labels = percent_format())
 
 ggplotly(p29, tooltip = "text") |>
@@ -745,7 +787,7 @@ p31 <- hud_gis |>
   labs(Title = "Emergency Solutions Grand Funding per Sheltered Homeless Person", x = "% of people homeless w/o shelter", y = "% of people homeless with shelter") +
   scale_x_log10(labels = scales::percent_format()) +
   scale_y_log10(labels = scales::percent_format()) +
-  stat_smooth(method = "lm")
+  geom_smooth(aes(x = `Unsheltered Homeless`/total_population, y = `Sheltered Total Homeless`/total_population), method = "lm")
 
 ggplotly(p31, tooltip = "text")
 
@@ -768,6 +810,26 @@ p32 <- hud_gis |>
   theme(axis.text.x = element_text(angle = 45))
 
 ggplotly(p32, tooltip = "text")
+
+
+
+p32a <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = med_hh_income, y = funding_tot/(total_population), color = `Overall Homeless`/total_population,
+                  text = paste(coc_name,
+                               '<br>Median Household Income: $', med_hh_income,
+                               '<br>Funding per person: $', round(funding_tot/total_population, digits = 2),
+                               '<br>Homelessness Rate: ', round((`Overall Homeless`/total_population)*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Homelessness rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format(prefix = "$")) +
+  labs(title = "Funding per Person by Median Household Income", x = "Median Household Income (USD)", 
+       y = "Funding per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p32a, tooltip = "text")
 
 
 
@@ -879,7 +941,8 @@ p37 <- hud_gis |>
                            '<br>Funding per person: $', round(funding_tot/(poverty_rate*total_population), digits = 2)))) +
   scale_fill_gradientn(transform = "log10",
                        colours = c("lightgrey", "orange2", "blue4"),
-                       name = "Funding per Person")
+                       name = "Funding per Person",
+                       labels = scales::comma_format(prefix = "$"))
 
 
 ggplotly(p37, tooltip = "text") |>
