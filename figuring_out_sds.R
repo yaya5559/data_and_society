@@ -496,11 +496,11 @@ qqq <- qqq |>
 # plots (arrange by value)
 ppp |>
   ggplot() + 
-  geom_col(aes(x = race, y = -median_scale_of_diff, fill = race))
+  geom_col(aes(x = race, y = median_scale_of_diff, fill = race))
 
 qqq |>
   ggplot() + 
-  geom_col(aes(x = race, y = -mean_scale_of_diff, fill = race))
+  geom_col(aes(x = race, y = mean_scale_of_diff, fill = race))
 
 
 

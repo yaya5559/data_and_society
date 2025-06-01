@@ -235,8 +235,8 @@ barplot(out_coc5$loadings[,7], main = "")    # High = poc, lots of housing, not 
 
 
 
-help9 <- lm(fnd_per_person ~ out_coc5$scores[, 1:5], data = cocstuff4pca)
-help8 <- lm(homeless_rate ~ out_coc5$scores[, 1:6], data = cocstuff4pca)
+help9 <- lm(fnd_per_person ~ out_coc5$scores[, 1:7], data = cocstuff4pca)
+help8 <- lm(homeless_rate ~ out_coc5$scores[, 1:7], data = cocstuff4pca)
 
 summary(help8)
 
@@ -245,7 +245,7 @@ supernova(help9)
 
 
 ggplot(cocstuff4pca) +
-  geom_jitter(aes(x = out_co5$scores[,1], y = fnd_per_person)) +
+  geom_jitter(aes(x = out_coc5$scores[,1], y = fnd_per_person)) +
   scale_x_continuous(labels = scales::comma_format()) +
   scale_y_continuous(labels = scales::comma_format(prefix = "$"))
 
@@ -289,6 +289,9 @@ vvv <- vvv |>
 
 vvv <- sf::st_cast(thingy, "MULTIPOLYGON")
 
+write_csv(vvv, file = "~/Data and Society/data_and_society/vvv.csv")
+write_csv(cocstuff4pca, file = "~/Data and Society/data_and_society/cocstuff4pca.csv")
+write_csv(too_many_cocs, file = "~/Data and Society/data_and_society/too_many_cocs.csv")
 
 
 #pc maps
@@ -299,7 +302,7 @@ y1 <- vvv |>
   geom_sf(aes(fill = pc1,
               text = paste(coc_name,
                            '<br>Pc1 score: ', round(pc1, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#fd8d3c", "#ffffcc", "#a1dab4", "#225ea8"),
+  scale_fill_gradientn(colours = c("#f03b20", "#ffffcc", "#41b6c4", "#225ea8"),
                        name = "Pc1 score")
 
 ggplotly(y1, tooltip = "text") |>
@@ -312,7 +315,7 @@ y2 <- vvv |>
   geom_sf(aes(fill = pc2,
               text = paste(coc_name,
                            '<br>Pc2 score: ', round(pc2, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#a1dab4", "#ffffcc", "#feb24c", "#f03b20"),
+  scale_fill_gradientn(colours = c("#f03b20", "#fd8d3c", "#feb24c", "#ffffcc", "#41b6c4", "#225ea8"),
                        name = "Pc2 score",
                        # limits = c(-5,5)
   )
@@ -327,7 +330,7 @@ y3 <- vvv |>
   geom_sf(aes(fill = pc3,
               text = paste(coc_name,
                            '<br>Pc3 score: ', round(pc3, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#f03b20", "#feb24c", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8"),
+  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#ffffcc", "#feb24c", "#fd8d3c", "#f03b20"),
                        name = "Pc3 score")
 
 ggplotly(y3, tooltip = "text") |>
