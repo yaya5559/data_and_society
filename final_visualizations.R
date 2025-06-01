@@ -58,7 +58,8 @@ p7 <- hud_gis |>
                        colours = c("lightgrey", "orange2", "blue4"),
                        labels = scales::comma_format(prefix = "$"),
                        name = "Funding per Person"
-  )
+  ) +
+  labs(title = "Federal Funding for Housing per Person by Continuum of Care Area")
 
 ggplotly(p7, tooltip = "text") |>
   style(hoveron = "fills")
@@ -174,6 +175,22 @@ p32 <- hud_gis |>
 ggplotly(p32, tooltip = "text")
 
 
+
+
+p54 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Sheltered Total Homeless`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Share of Homeless People Sleeping in Shelters', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 2), "%",
+                           "<br>Homeless rate: ", round(`Overall Homeless`/total_population*100, digits = 2), "%",
+                           "<br>Funding per Person: $", round(fnd_per_person, digits = 2)))) +
+  scale_fill_gradientn(colours = c("#f3f3f3", "orange2", "blue4"),
+                       name = "Share of Homeless<br>People Sleeping in<br>Shelters",
+                       labels = scales::percent_format())
+
+ggplotly(p54, tooltip = "text") |>
+  style(hoveron = "fills")
 
 
 

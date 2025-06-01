@@ -86,7 +86,6 @@ ggplotly(p3, tooltip = "text")
 
 
 
-
 # Homeless rate by $/homeless individual scatterplot (>$300,000 per person)
 
 p4 <- hud_gis |>
@@ -970,6 +969,340 @@ ggplotly(p38, tooltip = "text") |>
   style(hoveron = "fills")
 
 
+
+
+
+# total year-round beds
+
+p39 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = (`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Permanent Housing Beds', round((`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/`Overall Homeless`, digits = 3)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Permanent Total Year-Round Beds",
+                       labels = scales::comma_format())
+
+ggplotly(p39, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+# Permanent housing map
+p40 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = (ind_hud_housing),
+              text = paste(coc_name,
+                           '<br>Permanent Housing Units', round(ind_hud_housing, digits = 3)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Permanent Housing Units",
+                       labels = scales::comma_format())
+
+ggplotly(p40, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+p41 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = fnd_per_person, y = ind_hud_housing, color = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 2),
+                               '<br>Public Housing Units per Person: ', round(ind_hud_housing, digits = 4),
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Poverty rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Public Housing Units by Housing Funding per Person", x = "Dollars per Person (USD)", 
+       y = "Federally Funded Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p41, tooltip = "text")
+
+
+
+
+p42 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = fnd_per_person, y = ind_hud_housing, color = homeless_rate,
+                  text = paste(coc_name,
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 2),
+                               '<br>Public Housing Units per Person: ', round(ind_hud_housing, digits = 4),
+                               '<br>Homelessness Rate: ', round(homeless_rate*100, digits = 3), '%',
+                               '<br>Total Population: ', round(total_population, digits = 0)))) +
+  scale_color_gradientn(transform = "log10",
+                        colors = c("orange2", "blue4"),
+                        name = "Homelessness rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Public Housing Units by Housing Funding per Person", x = "Dollars per Person (USD)", 
+       y = "Federally Funded Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p42, tooltip = "text")
+
+
+
+p43 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = fnd_per_person, y = (`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/total_population, color = homeless_rate,
+                  text = paste(coc_name,
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 2),
+                               '<br>Permanent Shelter Beds per Person: ', round((`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/total_population, digits = 4),
+                               '<br>Homelessness Rate: ', round(homeless_rate*100, digits = 3), '%',
+                               '<br>Total Population: ', round(total_population, digits = 0)))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Homelessness rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Public Housing Units by Housing Funding per Person", x = "Dollars per Person (USD)", 
+       y = "Permanent Shelter Beds per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p43, tooltip = "text")
+
+
+
+
+p44 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = fnd_per_person, y = (`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/`Overall Homeless`, color = ind_hud_housing,
+                  text = paste(coc_name,
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 2),
+                               '<br>Permanent Shelter Beds per Homeless Person: ', round((`Total Year-Round Beds (OPH)` + `Total Year-Round Beds (PSH)`)/`Overall Homeless`, digits = 4),
+                               '<br>Homelessness Rate: ', round(homeless_rate*100, digits = 3), '%',
+                               '<br>Public Housing Units per Person: ', round(ind_hud_housing, digits = 4)))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Homelessness rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Public Housing Units by Housing Funding per Person", x = "Dollars per Person (USD)", 
+       y = "Permanent Shelter Beds per Homeless Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p44, tooltip = "text")
+
+
+
+p45 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = ind_hud_housing, y = homeless_rate, color = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 2),
+                               '<br>Homeless Rate: ', round(homeless_rate*100, digits = 3), "%",
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Poverty rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format()) +
+  scale_y_log10(labels = scales::percent_format()) +
+  labs(title = "Homelessness by Federally Funded Housing Units per Person", x = "Public Housing Units per Person", 
+       y = "Homeless Rate") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p45, tooltip = "text")
+
+
+
+
+p46 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = poverty_rate, y = ind_hud_housing, color = housing_cost_burden,
+                  text = paste(coc_name,
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%",
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Housing Cost Burden",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Federally Funded Housing Units per Person by Poverty Rate", x = "Poverty Rate", 
+       y = "Public Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p46, tooltip = "text")
+
+
+
+
+
+p47 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = housing_cost_burden, y = homeless_rate, color = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%',
+                               '<br>Homeless Rate: ', round(homeless_rate*100, digits = 3), "%",
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%"))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Poverty Rate",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::percent_format()) +
+  labs(title = "Homelessness by Housing Cost Burden", x = "Housing Cost Burdened Households", 
+       y = "Homeless Rate") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p47, tooltip = "text")
+
+
+
+
+p48 <- hud_gis |>
+  filter(`CoC Category` == "Largely Suburban CoC" | `CoC Category` == "Largely Rural CoC" | `CoC Category` == "Major City CoC" | `CoC Category` == "Other Largely Urban CoC") |>
+  ggplot() +
+  geom_jitter(aes(x = `CoC Category`, y = ind_hud_housing, color = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%",
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "poverty_rate",
+                        labels = scales::percent_format()) +
+    scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Federally Funded Housing Units per Person by Poverty Rate", x = "CoC Category", 
+       y = "Public Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p48, tooltip = "text")
+
+
+
+p49 <- hud_gis |>
+  filter(`CoC Category` == "Largely Suburban CoC" | `CoC Category` == "Largely Rural CoC" | `CoC Category` == "Major City CoC" | `CoC Category` == "Other Largely Urban CoC") |>
+  ggplot() +
+  geom_boxplot(aes(x = `CoC Category`, y = poverty_rate,
+                  text = paste(coc_name,
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%",
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%'))) +
+  geom_jitter(aes(x = `CoC Category`, y = poverty_rate, color = homeless_rate, alpha = 0.5,
+                  text = paste(coc_name,
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%",
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "poverty_rate",
+                        labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Federally Funded Housing Units per Person by Poverty Rate", x = "CoC Category", 
+       y = "Public Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p49, tooltip = "text")
+
+
+
+
+p50 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = capacity_housing, y = ind_hud_housing, color = housing_cost_burden,
+                  text = paste(coc_name,
+                               '<br>Poverty Rate: ', round(poverty_rate*100, digits = 3), "%",
+                               '<br>Housing Units per Person: ', round(ind_hud_housing, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(housing_cost_burden*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Housing Cost Burden",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::percent_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Federally Funded Housing Units per Person by Poverty Rate", x = "Poverty Rate", 
+       y = "Public Housing Units per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p50, tooltip = "text")
+
+
+
+p51 <- hud_gis |>
+  ggplot() +
+  geom_jitter(aes(x = pop_density*1000000, y = fnd_per_person, color = `Sheltered Total Homeless`/`Overall Homeless`,
+                  text = paste(coc_name,
+                               '<br>Population Density (people/km^2)', round(pop_density*1000000, digits = 3),
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 3),
+                               '<br>Percent of Homeless People who Have Shelter: ', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Percent of Homeless<br>People in Shelters",
+                        labels = scales::percent_format()) +
+  scale_x_log10(labels = scales::comma_format()) +
+  scale_y_log10(labels = scales::comma_format()) +
+  labs(title = "Housing Funding per Person by Population Density", x = "Population Density (People per Square Km)", 
+       y = "Housing Funding per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p51, tooltip = "text")
+
+
+
+
+
+p52 <- hud_gis |>
+  filter(`CoC Category` == "Largely Suburban CoC" | `CoC Category` == "Largely Rural CoC" | `CoC Category` == "Major City CoC" | `CoC Category` == "Other Largely Urban CoC") |>
+  ggplot() +
+  geom_boxplot(aes(x = `CoC Category`, y = `Sheltered Total Homeless`/`Overall Homeless`,
+                  text = paste(coc_name,
+                               '<br>Population Density (people/km^2)', round(pop_density*1000000, digits = 3),
+                               '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 3),
+                               '<br>Housing Cost Burdened Households: ', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 3), '%'))) +
+  scale_color_gradient2(low = "lightgrey", mid = "orange2", high = "blue4",
+                        name = "Housing Cost Burden",
+                        labels = scales::percent_format()) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Housing Funding per Person by Population Density", x = "Population Density (People per Square Km)", 
+       y = "Housing Funding per Person") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p52, tooltip = "text")
+
+
+
+
+p53 <- hud_gis |>
+  # filter(fnd_per_person >= 10) |>
+  ggplot() +
+  geom_jitter(aes(x = fnd_per_person, y = `Sheltered Total Homeless`/`Overall Homeless`, color = homeless_rate,
+                   text = paste(coc_name,
+                                '<br>Housing Funding per Person: $', round(fnd_per_person, digits = 3),
+                                '<br>Share of homeless people in shelters: ', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 3), '%',
+                                '<br>Homeless rate :', round(homeless_rate*100, digits = 3), "%"))) +
+  scale_color_gradientn(transform = "log10",
+                        colors = c("orange2", "blue4"),
+                        name = "Homeless Rate",
+                        labels = scales::percent_format()) +
+  # geom_smooth(aes(x = fnd_per_person, y = `Sheltered Total Homeless`/`Overall Homeless`)) +
+  scale_x_log10(labels = scales::comma_format(prefix = "$")) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Homeless People in Shelters by Funding per Person", x = "Housing Funding per Person", 
+       y = "Share of Homeless People in Shelters") +
+  theme(axis.text.x = element_text(angle = 45))
+
+ggplotly(p53, tooltip = "text")
+
+
+
+p54 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Sheltered Total Homeless`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Share of Homeless People Sleeping in Shelters', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 2), "%",
+                           "<br>Homeless rate: ", round(`Overall Homeless`/total_population*100, digits = 2), "%",
+                           "<br>Funding per Person: $", round(fnd_per_person, digits = 2)))) +
+  scale_fill_gradientn(colours = c("#f3f3f3", "orange2", "blue4"),
+                       name = "Share of Homeless<br>People Sleeping in<br>Shelters",
+                       labels = scales::percent_format())
+
+ggplotly(p54, tooltip = "text") |>
+  style(hoveron = "fills")
 
 
 
