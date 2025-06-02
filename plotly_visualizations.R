@@ -1306,5 +1306,57 @@ ggplotly(p54, tooltip = "text") |>
 
 
 
+p55 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = ind_hud_housing,
+              text = paste(coc_name,
+                           '<br>Share of housing units that are federally funded: ', round(ind_hud_housing*100, digits = 2), "%",
+                           "<br>Homeless rate: ", round(`Overall Homeless`/total_population*100, digits = 2), "%",
+                           "<br>Funding per Person: $", round(fnd_per_person, digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("#f3f3f3", "orange2", "blue4"),
+                       name = "Share of Housing<br>Units Funded by<br>Government",
+                       labels = scales::percent_format())
+
+ggplotly(p55, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+p56 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = ind_hud_all,
+              text = paste(coc_name,
+                           '<br>Housing units federally funded: ', round(ind_hud_all, digits = 3), "(per person)",
+                           "<br>Homeless rate: ", round(`Overall Homeless`/total_population*100, digits = 2), "%",
+                           "<br>Funding per Person: $", round(fnd_per_person, digits = 2)))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("#f3f3f3", "orange2", "blue4"),
+                       name = "Share of Housing<br>Units Funded by<br>Government<br>(units per person)",
+                       labels = scales::comma_format())
+
+ggplotly(p56, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+p57 <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Chronically Homeless`/`Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Chronically Homeless Rate: ', round((`Overall Chronically Homeless`/`Overall Homeless`)*100, digits = 2), "%"))) +
+  scale_fill_gradientn(transform = "log10",
+                       colours = c("lightgrey", "orange2", "blue4"),
+                       name = "Percent of homelesss<br>people experiencing<br>chronic homeless",
+                       labels = scales::percent_format())
+
+ggplotly(p57, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
 
 "#ff704c", "#115b8a"

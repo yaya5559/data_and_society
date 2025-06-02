@@ -152,57 +152,27 @@ data_list <- data.frame(t(list_data))
 
 coc_pca5 <- cocstuff4pca |>
   select(
-    # total_population,
     med_hh_income,
-    # pop_AIAN,
-    # pop_asian,
-    # pop_black,
-    # pop_multi,
-    # pop_NHPI,
-    # pop_white,
     percent_poc,
     pop_hisp_latx,
     pop_under_18,
-    # pop_25_to_34,
-    # pop_35_to_44,
-    # pop_45_to_54,
-    # pop_55_to_64,
     pop_over_64,
     pop_density,
-    # pop_female,
     employment_access_index,
-    # rail_transit_km,
-    # docks,
-    # stations_subway,
     poverty_rate,
-    # stations_elevated,
-    # capacity_transport,
     housing_cost_burden,
     overcrowded_housing,
-    # homeless_rate,
-    # permits,
-    # ALAND,
-    # percent_rural,
-    # incomplete_kitchen,
-    # cnw_500,
-    # AWATER,
     housing_units,
-    # transport_trade_jobs
   )
-
-
-
 
 # standardize/normalize everything
 coc_pca5 <- scale(coc_pca5)
-
-
 
 out_coc5 <- princomp(coc_pca5)
 
 summary(out_coc5)
 
-out_coc5$loadings[, 1:7]
+out_coc5$loadings[, 1:6]
 
 
 
@@ -235,8 +205,8 @@ barplot(out_coc5$loadings[,7], main = "")    # High = poc, lots of housing, not 
 
 
 
-help9 <- lm(fnd_per_person ~ out_coc5$scores[, 1:7], data = cocstuff4pca)
-help8 <- lm(homeless_rate ~ out_coc5$scores[, 1:7], data = cocstuff4pca)
+help9 <- lm(fnd_per_person ~ out_coc5$scores[, 1:6], data = cocstuff4pca)
+help8 <- lm(homeless_rate ~ out_coc5$scores[, 1:6], data = cocstuff4pca)
 
 summary(help8)
 
@@ -287,7 +257,7 @@ vvv <- stupid_simple_GIS |>
 vvv <- vvv |>
   left_join(coc_data, by = c("COCNUM" = "coc_num"))
 
-vvv <- sf::st_cast(thingy, "MULTIPOLYGON")
+vvv <- sf::st_cast(vvv, "MULTIPOLYGON")
 
 write_csv(vvv, file = "~/Data and Society/data_and_society/vvv.csv")
 write_csv(cocstuff4pca, file = "~/Data and Society/data_and_society/cocstuff4pca.csv")

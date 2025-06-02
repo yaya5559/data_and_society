@@ -822,6 +822,8 @@ cocdat <- cdat |>
             ind_hud_hcv = sum(hud_hcv*total_pop)/sum(total_pop),
             ind_hud_pbs8 = sum(hud_pbs8*total_pop)/sum(total_pop),
             ind_hud_ph = sum(hud_ph*total_pop)/sum(total_pop),
+            ind_hud_housing = sum(hud_hcv*total_pop + hud_ph*total_pop)/sum(total_pop),
+            ind_hud_all = sum(hud_hcv*total_pop + hud_ph*total_pop + hud_pbs8*total_pop + hud_202*total_pop)/sum(total_pop),
             capacity_housing = sum(capacity_housing*total_pop)/sum(total_pop),
             capacity_environment = sum(capacity_environment*total_pop)/sum(total_pop),
             capacity_transport = sum(capacity_transport*total_pop)/sum(total_pop),
