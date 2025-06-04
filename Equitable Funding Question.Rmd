@@ -1,0 +1,457 @@
+---
+title: "Equitable_Funding_CoCs"
+author: "Mercedes Cullen"
+date: "2025-04-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(plotly)
+```
+
+## Load Data 
+
+```{r updated data}
+coc_data <- read_csv("coc_data.csv")
+coc_data_1_ <- read_csv("coc_data (1).csv")
+```
+
+## mutate data 
+
+```{r}
+coc_data <- coc_data |>
+  mutate(funding_per_person = funding_tot / `Overall Homeless`,
+         equity_score = funding_per_person / poverty_rate)|>
+  filter(!is.na(equity_score), is.finite(equity_score))
+
+coc_data_1 <- coc_data_1 |>
+  mutate(funding_per_person = funding_tot / `Overall Homeless`)
+
+coc_data_1 <- coc_data_1 |> 
+  mutate(homeless_rate = `Overall Homeless`/total_population)
+
+```
+
+
+## Model for ages, population, and poverty
+
+```{r model}
+model_data <- coc_long |>
+  filter(funding_per_person > 0, homeless_count > 0) |>
+  mutate(
+    log_funding = log(funding_per_person),
+    log_homeless = log(homeless_count)
+  )
+model <- lm(log_funding ~ log_homeless + poverty_rate + total_population + age_group, data = model_data)
+
+summary(model)
+```
+
+```{r longer weighted data}
+coc_long_1 <- coc_data_1_ |>
+  pivot_longer(
+    cols = c(`Overall Homeless - Under 18`, `Overall Homeless - Age 18 to 24`, `Overall Homeless - Age 25 to 34`, `Overall Homeless - Age 35 to 44`, `Overall Homeless - Age 45 to 54`, `Overall Homeless - Age 55 to 64`, `Overall Homeless - Over 64`),
+    names_to = "age_group",
+    values_to = "homeless_count")|>  
+  mutate(
+    age_group = str_replace(age_group, "Overall Homeless - ", ""),
+    funding_per_person = funding_tot / homeless_count,
+    homeless_rate = homeless_count/`Overall Homeless`) |>
+  filter(homeless_count > 0)
+```
+
+
+```{r facets with weighted data}
+myfacet <- coc_long_1 |>
+  ggplot(aes(x = funding_per_person, y = homeless_rate)) +
+  geom_point(aes(color = poverty_rate, text = paste0(
+        "Population: ", total_population, "<br>",
+        "Poverty Rate: ", poverty_rate, "%"
+      )), alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkred", linetype = "dashed") +
+  scale_x_log10() + 
+  scale_y_log10() +
+  facet_wrap(~ age_group, scales = "free") +
+  scale_size_continuous(range = c(2, 10)) + 
+  labs(
+    title = "Log-Transformed Funding per Person vs. Homeless Count by Age Group",
+    x = "Log of Funding per Homeless Person (USD)",
+    y = "Log of Homeless Count",
+    size = "Total Population",
+    color = "Poverty Rate"
+  ) +
+  theme_minimal()
+interactive_myfacet <- ggplotly(myfacet, tooltip = "text")
+interactive_myfacet
+```
+
+```{r model for weighted data}
+model_data1 <- coc_long_1 |>
+  filter(funding_per_person > 0, homeless_count > 0) |>
+  mutate(
+    log_funding = log(funding_per_person),
+    log_homeless = log(homeless_count)
+  )
+model1 <- lm(log_funding ~ log_homeless + poverty_rate + total_population + age_group, data = model_data1)
+
+summary(model1)
+```
+
+```{r}
+coc_data_1 <- coc_data_1 |>
+  mutate(funding_per_homeless = funding_tot/`Overall Homeless`)
+
+myplot <- coc_data_1 |>
+  ggplot() +
+  geom_jitter(aes(x = funding_per_homeless, y = homeless_rate, color = poverty_rate)) +   
+  text = paste0(
+    "CoC: ",coc_name , "<br>",
+    "Poverty Rate: ", scales::percent(poverty_rate, accuracy = 0.1)) +
+   scale_x_log10( 
+     breaks = c(100, 1000, 10000, 100000, 1000000), 
+     labels = scales::label_dollar()) +
+   scale_y_log10(
+  breaks = c(0.1, 0.01, 0.001, 0.0001),
+  labels = scales::percent_format(accuracy = 0.1)) +
+  scale_color_continuous(type = "viridis", labels =   scales::percent_format(accuracy = 0.1)) +
+  labs(
+    title = "Federal funding per capita vs. Homelessness for each CoC",
+    x = "Funding per homeless individual",
+    y = "Rate of homelessness",
+    color = "Poverty rate"
+  )
+
+ggplotly(myplot, tooltip = "text")
+```
+
+### Pie chart 
+
+```{r}
+race_totals <- coc_data_1 |>
+  summarise(
+    American_Indian_Alaska_Native = sum(amer_indian_ak_native, na.rm = TRUE),
+    Asian = sum(asian, na.rm = TRUE),
+    Black = sum(black, na.rm = TRUE),
+    Native_Hawaiian_Other_PI = sum(native_hi_other_pi, na.rm = TRUE),
+    Other_Race = sum(other_race, na.rm = TRUE),
+    White = sum(white, na.rm = TRUE)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "Race", values_to = "Total")
+
+race_totals <- race_totals |>
+  mutate(Percentage = Total / sum(Total) * 100)
+
+  
+colors <- c(
+  "American_Indian_Alaska_Native" = "#1f77b4",
+  "Asian" = "#ff7f0e",
+  "Black" = "#2ca02c",
+  "Native_Hawaiian_Other_PI" = "#d62728",
+  "Other_Race" = "#9467bd",  # <- custom color for Other Race
+  "White" = "#8c564b"
+)
+  
+plot_ly(
+  race_totals,
+  labels = ~Race,
+  values = ~Total,
+  type = 'pie',
+  textinfo = 'none',
+  hoverinfo = 'label+percent',
+  marker = list(colors = colors[race_totals$Race])
+) |>
+  layout(title = "Interactive Breakdown of Homeless Population by Race")
+```
+
+### federal funding vs poverty rate
+
+```{r poverty rate vs funding per person}
+myplot2 <- coc_data_1 |>
+  ggplot() +
+  geom_jitter(aes(x = poverty_rate, y = funding_per_person)) +
+  scale_x_log10() + 
+  scale_y_log10() 
+
+myplot2
+```
+
+```{r poverty model}
+poverty_model <- lm(funding_per_person ~ , data = coc_data_1)
+summary(poverty_model)
+
+original_model <- lm(funding_per_person ~ homeless_rate, data = coc_data_1)
+summary(original_model) 
+plot(original_model, which = 1, main = "Residuals vs Fitted")
+
+```
+
+### density plots
+
+```{r load data}
+coc_data_updated <- read.csv("coc_data_new.csv")
+county_data <- read.csv("county_data_take2.csv")
+```
+
+```{r renaming variables}
+library(dplyr)
+library(janitor)
+library(ggplot2)
+library(scales)
+county_data_take2 <- county_data_take2 |> janitor::clean_names()
+```
+
+```{r}
+ccc <- county_data_take2 |>
+  group_by(coc_num) |>
+  summarise(
+    total_population = sum(total_pop, na.rm = TRUE),
+    total_homeless = mean(overall_homeless, na.rm = TRUE),
+    homeless_rate = mean(overall_homeless, na.rm = TRUE) / sum(total_pop, na.rm = TRUE),
+
+    hmls_AIAN = mean(overall_homeless_american_indian_alaska_native_or_indigenous, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+    hmls_asian = mean(overall_homeless_asian_or_asian_american, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+    hmls_black = mean(overall_homeless_black_african_american_or_african, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+    hmls_multi = mean(overall_homeless_multi_racial, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+    hmls_NHPI = mean(overall_homeless_native_hawaiian_or_other_pacific_islander, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+    hmls_white = mean(overall_homeless_white + overall_homeless_middle_eastern_or_north_african, na.rm = TRUE) / mean(overall_homeless, na.rm = TRUE),
+
+    pop_AIAN = sum(amer_indian_ak_native, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE),
+    pop_asian = sum(asian, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE),
+    pop_black = sum(black, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE),
+    pop_multi = sum(multi_racial, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE),
+    pop_NHPI = sum(native_hi_other_pi, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE),
+    pop_white = sum(white, na.rm = TRUE) / sum(popest - other_race, na.rm = TRUE)
+  )
+
+# Remove row 371 (optional, may need explanation)
+ccc <- ccc[-c(371), ]
+
+# Calculate racial gaps
+ccc <- ccc |>
+  mutate(
+    gap_AIAN = hmls_AIAN - pop_AIAN,
+    gap_asian = hmls_asian - pop_asian,
+    gap_black = hmls_black - pop_black,
+    gap_multi = hmls_multi - pop_multi,
+    gap_NHPI = hmls_NHPI - pop_NHPI,
+    gap_white = hmls_white - pop_white
+  )
+
+# Standard deviation of each gap
+ddd <- ccc |>
+  summarise(
+    sd_AIAN = sqrt(sum(gap_AIAN^2) / n()),
+    sd_asian = sqrt(sum(gap_asian^2) / n()),
+    sd_black = sqrt(sum(gap_black^2) / n()),
+    sd_multi = sqrt(sum(gap_multi^2) / n()),
+    sd_NHPI = sqrt(sum(gap_NHPI^2) / n()),
+    sd_white = sqrt(sum(gap_white^2) / n())
+  )
+
+# Normalize the gaps by standard deviation
+ccc <- ccc |>
+  mutate(
+    sd_gap_AIAN = gap_AIAN / ddd$sd_AIAN,
+    sd_gap_asian = gap_asian / ddd$sd_asian,
+    sd_gap_black = gap_black / ddd$sd_black,
+    sd_gap_multi = gap_multi / ddd$sd_multi,
+    sd_gap_NHPI = gap_NHPI / ddd$sd_NHPI,
+    sd_gap_white = gap_white / ddd$sd_white
+  )
+
+# Median SD gap
+xxx <- ccc |>
+  summarise(
+    aIAN = median(sd_gap_AIAN),
+    asian = median(sd_gap_asian),
+    black = median(sd_gap_black),
+    multi = median(sd_gap_multi),
+    nHPI = median(sd_gap_NHPI),
+    white = median(sd_gap_white)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "race", values_to = "median_sd")
+
+# Mean SD gap
+yyy <- ccc |>
+  summarise(
+    aIAN = mean(sd_gap_AIAN),
+    asian = mean(sd_gap_asian),
+    black = mean(sd_gap_black),
+    multi = mean(sd_gap_multi),
+    nHPI = mean(sd_gap_NHPI),
+    white = mean(sd_gap_white)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "race", values_to = "mean_sd")
+
+# All CoCs: long format
+zzz <- ccc |>
+  select(coc_num, starts_with("sd_gap_")) |>
+  pivot_longer(cols = -coc_num, names_to = "race", values_to = "sd_gap")
+
+# Plot: Median gap (in SD units)
+ggplot(xxx, aes(x = race, y = -median_sd, fill = race)) + 
+  geom_col() +
+  labs(title = "Median Racial Gap in Homelessness vs. Population (%) by SD")
+
+# Plot: Mean gap
+ggplot(yyy, aes(x = race, y = -mean_sd, fill = race)) + 
+  geom_col() +
+  labs(title = "Mean Racial Gap in Homelessness vs. Population (%) by SD")
+
+# Density plot of SD gaps
+ggplot(zzz, aes(x = sd_gap, color = race)) +
+  geom_density() +
+  scale_x_log10(labels = comma_format()) +
+  labs(title = "Distribution of Racial Gaps (Standard Deviations)", x = "Gap (SDs)")
+
+# Example: Compare white share of homeless vs. population
+ggplot(ccc) +
+  geom_density(aes(x = hmls_white), fill = "gray60", alpha = 0.4) +
+  geom_density(aes(x = pop_white), color = "gray20") +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "White (incl. MENA): Homeless vs Population Share",
+    x = "Share",
+    y = "Density"
+  )
+```
+
+```{r more density plots}
+# AIAN
+ggplot(ccc) +
+  geom_density(aes(x = hmls_AIAN), fill = "red", alpha = 0.4) +
+  geom_density(aes(x = pop_AIAN), color = "red") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "American Indian/Alaska Native: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+# Asian
+ggplot(ccc) +
+  geom_density(aes(x = hmls_asian), fill = "turquoise", alpha = 0.4) +
+  geom_density(aes(x = pop_asian), color = "turquoise") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "Asian: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+# Black
+ggplot(ccc) +
+  geom_density(aes(x = hmls_black), fill = "blue", alpha = 0.4) +
+  geom_density(aes(x = pop_black), color = "blue") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "Black: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+# Multi-Racial
+ggplot(ccc) +
+  geom_density(aes(x = hmls_multi), fill = "green3", alpha = 0.4) +
+  geom_density(aes(x = pop_multi), color = "green3") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "Multi-Racial: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+# Native Hawaiian / Pacific Islander
+ggplot(ccc) +
+  geom_density(aes(x = hmls_NHPI), fill = "skyblue1", alpha = 0.4) +
+  geom_density(aes(x = pop_NHPI), color = "skyblue1") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "Native Hawaiian or Other Pacific Islander: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+# White (including MENA)
+ggplot(ccc) +
+  geom_density(aes(x = hmls_white), fill = "gray60", alpha = 0.4) +
+  geom_density(aes(x = pop_white), color = "gray20") +
+  scale_x_continuous(labels = percent_format()) +
+  labs(title = "White: Homeless vs Population Share",
+       x = "Share", y = "Density")
+
+```
+
+
+### adding legend to side by side density plots 
+
+
+```{r black}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_black, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_black, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "blue", "Population Share" = "black")
+  ) +
+  labs(title = "Black", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+```{r AINA}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_AIAN, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_AIAN, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "firebrick", "Population Share" = "black")
+  ) +
+  labs(title = "American Indian/Alaska Native", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+```{r Asian}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_asian, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_asian, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "turquoise4", "Population Share" = "black")
+  ) +
+  labs(title = "Asian", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+```{r multi racial}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_multi, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_multi, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "darkgreen", "Population Share" = "black")
+  ) +
+  labs(title = "Multi-Racial", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+```{r NHPI}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_NHPI, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_NHPI, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "skyblue", "Population Share" = "black")
+  ) +
+  labs(title = "Native Hawaiian or Other Pacific Islander", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+```{r white}
+ggplot(ccc) +
+  geom_density(aes(x = hmls_white, fill = "Homeless Share"), alpha = 0.4) +
+  geom_density(aes(x = pop_white, fill = "Population Share"), alpha = 0.4) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  scale_fill_manual(
+    name = "Group",
+    values = c("Homeless Share" = "gray60", "Population Share" = "black")
+  ) +
+  labs(title = "White (incl. MENA)", x = "Share", y = "Density") +
+  theme_minimal()
+```
+
+

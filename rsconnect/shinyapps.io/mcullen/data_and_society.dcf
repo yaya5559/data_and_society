@@ -1,0 +1,13 @@
+name: data_and_society
+title: data_and_society
+username: mcullen
+account: mcullen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14700184
+bundleId: 10398755
+url: https://mcullen.shinyapps.io/data_and_society/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|2024-HIC-Counts-by-CoC.csv|2024-HIC-Counts-by-State.csv|2024-PIT-Counts-by-CoC.csv|2024-PIT-Counts-by-State.csv|actual_pca.R|Beginning Models.Rmd|coc_data (1).csv|coc_data_new.csv|Continuum_of_Care_Grantee_Areas.dbf|Continuum_of_Care_Grantee_Areas.prj|Continuum_of_Care_Grantee_Areas.shp|Continuum_of_Care_Grantee_Areas.shx|Continuum_of_Care_Grantee_Areas_671492018348724297/Continuum_of_Care_Grantee_Areas.cpg|Continuum_of_Care_Grantee_Areas_671492018348724297/Continuum_of_Care_Grantee_Areas.shp.xml|county_data.csv|county_data_take2 (1).csv|county_equity_metrics.csv|DAT4500 Intro.png|Data Import.R|do_not_touch_pca_after_touching.R|do_not_touch_pca_before_touching.R|EDA Simple Histogram.R|Equitable Funding Question.Rmd|figuring_out_sds.R|Final-Write-Up.html|Final Report.Rmd|Final Write-Up.Rmd|Final_Shiny_Embedded.Rmd|final_visualizations.R|mapCocSpending.Rmd|models.R|princincipal_comp.R|Privacy Reading and Reflection.docx|state_data.csv|state_equity_metrics.csv|stupid_simple_GIS.shp|table1_countyprogram.csv|table2_stateprogram redo.xlsx|table2_stateprogram.csv|table4_state-indicator.csv|CoC_GIS_National_Boundary.gdb|Project_app|stupid_simple_GIS.gdb|Week_5_Presentation

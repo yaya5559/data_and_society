@@ -1,0 +1,83 @@
+---
+title: "Lab Name"
+author: "Author Name"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+
+library(leaflet)
+library(sf)
+library(dplyr)
+library(RColorBrewer)
+library(htmltools)
+```
+
+### Exercise 1
+
+Insert any text here.
+
+```{r code-chunk-label}
+library(sf)
+library(tidyverse)
+library(plotly)
+library(readxl)
+library(viridis)
+
+coc_data <- read_csv("coc_data 1.csv")
+
+gis_files <- st_read("stupid_simple_GIS.shp")
+
+# 1. Read and prepare shapefile with proper CRS handling
+coc_shapes <- st_read("C:/Users/yahya/OneDrive/Bureau/data_and_society/Continuum_of_Care_Grantee_Areas.shp") %>% 
+  rename(coc_num = COCNUM) %>% 
+  st_transform(4326)  # Convert to standard WGS84 lat/lon for better compatibility
+
+# 2. Join with spending data - ensure matching data types
+coc_map_data <- coc_shapes %>% 
+  left_join(coc_data_1 %>% mutate(coc_num = as.character(coc_num)), 
+            by = "coc_num") %>% 
+  filter(!is.na(funding_tot))  # Remove areas with no spending data
+
+# 3. Create optimized static plot
+map_plot <- ggplot(coc_map_data) +
+  geom_sf(aes(fill = funding_tot,
+              text = paste("<b>", coc_name, "</b>",
+                          "<br>Spending:", scales::dollar(funding_tot))),
+          color = NA,  # Remove borders for cleaner look
+          lwd = 0) +   # No line width
+  scale_fill_viridis(
+    option = "plasma",
+    labels = scales::dollar_format(scale = 1e-6, suffix = "M"),  # Format in millions
+    name = "Total Spending ($M)"
+  ) +
+  theme_void() +
+  labs(title = "Continuum of Care Program Spending")
+
+# 4. Create interactive plot with performance optimizations
+interactive_map <- ggplotly(map_plot, tooltip = "text", height = 700) %>%
+  plotly::layout(
+    legend = list(
+      orientation = "h",
+      y = -0.1,
+      xanchor = "center",
+      x = 0.5
+    ),
+    margin = list(t = 40)  # Add top margin for title
+  ) %>% 
+  plotly::config(
+    displayModeBar = TRUE,
+    scrollZoom = TRUE  # Enable zoom with mouse scroll
+  )
+
+# Display the map
+interactive_map
+```
+
+### Exercise 2
+
+...
+

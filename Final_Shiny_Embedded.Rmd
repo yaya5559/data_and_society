@@ -1,0 +1,113 @@
+---
+title: "Capstone Project with Embedded Shiny App"
+output: html_document
+runtime: shiny
+---
+
+```{r, echo=FALSE}
+# Load libraries
+library(shiny)
+library(tidyverse)
+library(sf)
+library(plotly)
+library(rmapshaper)
+library(janitor)
+
+# === Load and clean your data ===
+ppp <- read_csv("ppp.csv") %>%
+  mutate(race_better = factor(race_better,
+                              levels = c("Native Hawaiian/Other Pacific Islander", 
+                                         "Black, African American, or African", 
+                                         "American Indian/Alaska Native", 
+                                         "White", 
+                                         "Multi-Racial", 
+                                         "Asian")))
+
+coc_data <- read_csv("coc_data (2).csv")
+too_many_cocs <- read_csv("too_many_cocs.csv")
+county_data_take2 <- read_csv("county_data_take2.csv") |> janitor::clean_names()
+
+GIS <- st_read("CoC_GIS_National_Boundary.gdb")
+stupid_simple_GIS <- ms_simplify(GIS, keep = 0.001, keep_shapes = FALSE)
+
+hud_gis <- stupid_simple_GIS %>%
+  right_join(coc_data, by = c("COCNUM" = "coc_num")) %>%
+  st_cast("MULTIPOLYGON")
+
+vvv <- stupid_simple_GIS %>%
+  left_join(too_many_cocs, by = c("COCNUM" = "coc_num")) %>%
+  left_join(coc_data, by = c("COCNUM" = "coc_num")) %>%
+  st_cast("MULTIPOLYGON")
+
+# === UI ===
+ui <- navbarPage("Capstone Project",
+  tabPanel("Racial Density Plots",
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("selected_race", "Select Racial Group:",
+                    choices = c("White", "Black", "Asian", "American Indian/Alaska Native", 
+                                "Native Hawaiian/Other Pacific Islander", "Multi-Racial"),
+                    selected = "White")
+      ),
+      mainPanel(
+        plotlyOutput("race_density_plot")
+      )
+    )
+  ),
+  tabPanel("Racial Bar Plot",
+    fluidPage(
+      h3("Racial Disparities in Homelessness"),
+      plotlyOutput("racial_bar_plot")
+    )
+  ),
+  tabPanel("Racial Maps",
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("map_race", "Select Racial Group:",
+                    choices = c(
+                      "Black, African American, or African" = "Overall Homeless - Black, African American, or African",
+                      "Hispanic/Latina/e/o" = "Overall Homeless - Hispanic/Latina/e/o",
+                      "American Indian, Alaska Native, or Indigenous" = "Overall Homeless - American Indian, Alaska Native, or Indigenous",
+                      "Asian or Asian American" = "Overall Homeless - Asian or Asian American",
+                      "Middle Eastern or North African" = "Overall Homeless - Middle Eastern or North African",
+                      "White" = "Overall Homeless - White",
+                      "Native Hawaiian or Other Pacific Islander" = "Overall Homeless - Native Hawaiian or Other Pacific Islander",
+                      "Multi-Racial" = "Overall Homeless - Multi-Racial"
+                    )
+        )
+      ),
+      mainPanel(
+        plotlyOutput("racial_map_plot")
+      )
+    )
+  ),
+  tabPanel("PCA Maps",
+    sidebarLayout(
+      sidebarPanel(
+        selectInput("selected_pc", "Select Principal Component:",
+                    choices = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6"))
+      ),
+      mainPanel(
+        plotlyOutput("pca_map_plot")
+      )
+    )
+  ),
+  tabPanel("About",
+    fluidPage(
+      h4("Data Sources"),
+      tags$ul(
+        tags$li("HUD Exchange"),
+        tags$li("Urban Institute"),
+        tags$li("U.S. Census Bureau")
+      )
+    )
+  )
+)
+
+# === SERVER ===
+server <- function(input, output) {
+  # Your server logic goes here — omitted here due to length
+}
+
+shinyApp(ui, server)
+```

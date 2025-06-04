@@ -1,0 +1,33 @@
+---
+title: "Federal Spending and Homelessness"
+author: "By: Caroline, Mercedes, Shukra, & Yahya"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Abstract
+
+One paragraph, capture readers attention, describe project and key findings and results
+
+### Introduction
+
+where did data originally come from and how was it collected
+
+### Methods 
+
+
+### Results
+
+what is the data actually, truly saying 
+
+### Discussion
+
+what is the interpretation of the data
+
+...
+

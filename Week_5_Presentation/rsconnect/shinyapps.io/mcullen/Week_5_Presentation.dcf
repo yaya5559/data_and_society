@@ -1,0 +1,13 @@
+name: Week_5_Presentation
+title: Week_5_Presentation
+username: mcullen
+account: mcullen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14594304
+bundleId: 10241407
+url: https://mcullen.shinyapps.io/Week_5_Presentation/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: stupid_simple_GIS.gdb.zip
