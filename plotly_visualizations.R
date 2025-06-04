@@ -1359,4 +1359,120 @@ ggplotly(p57, tooltip = "text") |>
 
 
 
+# share of homeless black
+p15a <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Black, African American, or African` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as Black: ', round(`Overall Homeless - Black, African American, or African`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as Black") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15a, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless american indian/alaska native
+p15b <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - American Indian, Alaska Native, or Indigenous` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>American Indian/AK Native: ', round(`Overall Homeless - American Indian, Alaska Native, or Indigenous`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as American<br>Indian or Alaska Native") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15b, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless asian
+p15c <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Asian or Asian American` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>Asian or Asian American: ', round(`Overall Homeless - Asian or Asian American`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as Asian<br>or Asian American") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15c, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless multi-racial
+p15d <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Multi-Racial` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>multi-racial: ', round(`Overall Homeless - Multi-Racial`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as multi-racial") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15d, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless native hawaiian/pacific islander
+p15e <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Native Hawaiian or Other Pacific Islander` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>Native Hawaiian or Other Pacific Islander: ', round(`Overall Homeless - Native Hawaiian or Other Pacific Islander`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as Native<br>Hawaiian or Other<br>Pacific Islander") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15e, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless white
+p15f <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = (`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`) / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>white: ', round((`Overall Homeless - White` + `Overall Homeless - Middle Eastern or North African`)/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as white") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15f, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+# share of homeless latinx
+p15g <- hud_gis |>
+  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
+  ggplot() +
+  geom_sf(aes(fill = `Overall Homeless - Hispanic/Latina/e/o` / `Overall Homeless`,
+              text = paste(coc_name,
+                           '<br>Percent of people in coc who identify as<br>Hispanic or Latinx: ', round(`Overall Homeless - Hispanic/Latina/e/o`/`Overall Homeless`*100, digits = 3), "%"))) +
+  scale_fill_gradientn(colours = c("#fcf1fc", "pink1", "#e778a1", "#ae017e", "#400060"),
+                       labels = scales::percent_format(),
+                       name = "Share of homeless <br>population that <br>idenifies as Hispanic<br>or Laintx") +
+  labs(title = "Homelessness by Race/Ethnicity - CoC View (2024)")
+
+ggplotly(p15g, tooltip = "text") |>
+  style(hoveron = "fills")
+
+
+
+
+
+
 "#ff704c", "#115b8a"

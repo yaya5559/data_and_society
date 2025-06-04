@@ -246,7 +246,7 @@ too_many_cocs$pc3 <- out_coc5$scores[,3]
 too_many_cocs$pc4 <- out_coc5$scores[,4]
 too_many_cocs$pc5 <- out_coc5$scores[,5]
 too_many_cocs$pc6 <- out_coc5$scores[,6]
-too_many_cocs$pc7 <- out_coc5$scores[,7]
+# too_many_cocs$pc7 <- out_coc5$scores[,7]
 
 
 

@@ -14,12 +14,12 @@ ppp$race_better <- factor(ppp$race_better, levels = c("Native Hawaiian/Other Pac
                                                       "White", 
                                                       "Multi-Racial", 
                                                       "Asian"))
-cocstuff4pca <- read_csv("too_many_cocs.csv")
+too_many_cocs <- read_csv("too_many_cocs.csv")
 vvv <- stupid_simple_GIS |>
   left_join(too_many_cocs, by = c("COCNUM" = "coc_num"))
 vvv <- vvv |>
   left_join(coc_data, by = c("COCNUM" = "coc_num"))
-vvv <- sf::st_cast(thingy, "MULTIPOLYGON")
+vvv <- sf::st_cast(vvv, "MULTIPOLYGON")
 
 coc_data <- read_csv("coc_data.csv")
 GIS <- sf::st_read("CoC_GIS_National_Boundary.gdb")
@@ -191,9 +191,9 @@ y2 <- vvv |>
   geom_sf(aes(fill = pc2,
               text = paste(coc_name,
                            '<br>Principal Component 2 score: ', round(pc2, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#f03b20", "#fd8d3c", "#feb24c", "#ffffcc", "#41b6c4", "#225ea8"),
+  scale_fill_gradientn(colours = c("#f03b20", "#fd8d3c", "#feb24c", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8"),
                        name = "PC 2 score",
-                       # limits = c(-5,5)
+                       limits = c(-6,6)
   )
 
 ggplotly(y2, tooltip = "text") |>
@@ -206,7 +206,7 @@ y3 <- vvv |>
   geom_sf(aes(fill = pc3,
               text = paste(coc_name,
                            '<br>Principal Component 3 score: ', round(pc3, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#ffffcc", "#feb24c", "#fd8d3c", "#f03b20"),
+  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#a1dab4", "#ffffcc", "#f03b20"),
                        name = "PC 3 score")
 
 ggplotly(y3, tooltip = "text") |>
