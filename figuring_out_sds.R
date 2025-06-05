@@ -482,6 +482,26 @@ ppp <- ooo |>
 ppp <- ppp |> 
   pivot_longer(cols = c(aIAN, asian, black, multi, nHPI, white), names_to = "race", values_to = "median_scale_of_diff")
 
+ppp <- ppp |> 
+  mutate(race_better = case_when(race == "aIAN" ~ "American Indian/Alaska Native",
+                                 race == "asian" ~ "Asian",
+                                 race == "black" ~ "Black, African American, or African",
+                                 race == "multi" ~ "Multi-Racial",
+                                 race == "nHPI" ~ "Native Hawaiian/Other Pacific Islander",
+                                 race == "white" ~ "White"))
+
+ppp$race_better <- factor(ppp$race_better, levels = c("Native Hawaiian/Other Pacific Islander", 
+                                                      "Black, African American, or African", 
+                                                      "American Indian/Alaska Native", 
+                                                      "White", 
+                                                      "Multi-Racial", 
+                                                      "Asian"))
+
+write_csv(ppp, file = "~/Data and Society/data_and_society/ppp.csv")
+
+
+
+
 qqq <- ooo |>
   summarise(aIAN = mean(gap_pct_AIAN),
             asian = mean(gap_pct_asian),
@@ -496,7 +516,20 @@ qqq <- qqq |>
 # plots (arrange by value)
 ppp |>
   ggplot() + 
-  geom_col(aes(x = race, y = median_scale_of_diff, fill = race))
+  geom_col(aes(x = race_better, y = median_scale_of_diff, fill = race)) +
+  theme(axis.text.x = element_text(vjust = .5)) +
+  scale_x_discrete(labels = c("Native Hawaiian/\nOther Pacific\nIslander",
+                            "Black, African\nAmerican, or\nAfrican",
+                            "American Indian/\nAlaska Native",
+                            "White",
+                            "Multi-Racial",
+                            "Asian"),
+                   name = "Race Group") +
+  scale_y_continuous(name = "Median Outcome Gap") +
+  labs(title = "Racial Disparities In Homelessness",
+       subtitle = "Gap is how many times more likely a given group is to be homeless than average homelessness rate for whole population") +
+  scale_fill_discrete(guide = FALSE)
+
 
 qqq |>
   ggplot() + 
@@ -543,6 +576,15 @@ ooo |>
   geom_density(aes(x = hmls_multi)) +
   geom_density(aes(x = pop_multi), color = "green3") +
   scale_x_continuous(label = scales::percent_format())
+
+ooo |>
+  ggplot() +
+  geom_density(aes(x = hmls_NHPI)) +
+  geom_density(aes(x = pop_NHPI), color = "skyblue1") +
+  scale_x_continuous(label = scales::percent_format(),
+                     limits = c(0,0.015))
+
+
 
 ooo |>
   ggplot() +

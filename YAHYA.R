@@ -39,13 +39,13 @@ hud_gis <- sf::st_cast(hud_gis, "MULTIPOLYGON")
 ### Slide 2
 # final data frame
 # side by side with names of different data sets
-    # - County indicators
-    # - County funding
-    # - County to CoC
-    # - CoC Homelessness PIT
-    # - CoC Shelter HIC
-    # - American Community Survey
-    # - GIS Shapefiles for CoCs
+# - County indicators
+# - County funding
+# - County to CoC
+# - CoC Homelessness PIT
+# - CoC Shelter HIC
+# - American Community Survey
+# - GIS Shapefiles for CoCs
 # Below list is diagram of how we linked them(?)
 
 
@@ -161,11 +161,11 @@ ppp |>
 ### Slide 5
 # Our variables put into the model (I will send you a picture)
 # process
-    # - choose which variables we want
-    # - check for/ remove NAs,
-    # - make sure each variable is numeric
-    # - standardize each variable
-    # - run through pca
+# - choose which variables we want
+# - check for/ remove NAs,
+# - make sure each variable is numeric
+# - standardize each variable
+# - run through pca
 
 
 
@@ -207,7 +207,7 @@ y3 <- vvv |>
   geom_sf(aes(fill = pc3,
               text = paste(coc_name,
                            '<br>Principal Component 3 score: ', round(pc3, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#a1dab4", "#ffffcc", "#f03b20"),
+  scale_fill_gradientn(colours = c("#f03b20", "#fd8d3c", "#feb24c", "#ffffcc", "#41b6c4"),
                        name = "PC 3 score") +
   coord_sf(xlim = c(-125,-68), ylim = c(25,50))
 
@@ -221,7 +221,7 @@ y4 <- vvv |>
   geom_sf(aes(fill = pc4,
               text = paste(coc_name,
                            '<br>Principal Component 4 score: ', round(pc4, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#7fcdbb", "#a1dab4", "#ffffcc", "#feb24c", "#f03b20"),
+  scale_fill_gradientn(colours = c("#f3330c", "#fd8d3c", "#feb24c", "#fecc5c", "#ffffcc", "#41b6c4", "#225ea8"),
                        name = "PC 4 score") +
   coord_sf(xlim = c(-125,-68), ylim = c(25,50))
 
@@ -250,84 +250,13 @@ y6 <- vvv |>
   geom_sf(aes(fill = pc6,
               text = paste(coc_name,
                            '<br>Principal Component 6 score: ', round(pc6, digits = 3)))) +
-  scale_fill_gradientn(colours = c("#225ea8", "#41b6c4", "#ffffcc", "#fecc5c", "#fd8d3c", "#f3330c"),
+  scale_fill_gradientn(colours = c("#f3330c", "#fd8d3c", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8"),
                        name = "PC 6 score") +
   coord_sf(xlim = c(-125,-68), ylim = c(25,50))
 
 ggplotly(y6, tooltip = "text") |>
   style(hoveron = "fills")
 
-
-
-
-
-
-### Slide 7
-# Models (dropdown, I will send you pictures of both models), 
-# also put side by side with principal component maps again.
-
-
-
-
-
-
-
-### Slide 8
-
-# funding per person map (same scale as $/homeless map)
-p7 <- hud_gis |>
-  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
-  ggplot() +
-  geom_sf(aes(fill = fnd_per_person,
-              text = paste(coc_name,
-                           '<br>Funding per person: $', round(fnd_per_person), digits = 2))) +
-  scale_fill_gradientn(transform = "log10",
-                       colours = c("lightgrey", "orange2", "blue4"),
-                       labels = scales::comma_format(prefix = "$"),
-                       name = "Funding per Person<br>(USD)") +
-  labs(title = "Federal Funding for Housing per Person - Continuum of Care View (2023)")
-
-ggplotly(p7, tooltip = "text") |>
-  style(hoveron = "fills")
-
-
-
-# Sheltered homeless map
-
-p54 <- hud_gis |>
-  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
-  ggplot() +
-  geom_sf(aes(fill = `Sheltered Total Homeless`/`Overall Homeless`,
-              text = paste(coc_name,
-                           '<br>Share of Homeless People Sleeping in Shelters', round(`Sheltered Total Homeless`/`Overall Homeless`*100, digits = 2), "%",
-                           "<br>Homeless rate: ", round(`Overall Homeless`/total_population*100, digits = 2), "%",
-                           "<br>Funding per Person: $", round(fnd_per_person, digits = 2), "<br>",
-                           `CoC Category`))) +
-  scale_fill_gradientn(colours = c("#f3f3f3", "orange2", "blue4"),
-                       name = "Share of Homeless<br>People Sleeping in<br>Shelters",
-                       labels = scales::percent_format()) +
-  labs(title = "Homeless People Sleeping in Shelters - CoC View (2024)")
-
-ggplotly(p54, tooltip = "text") |>
-  style(hoveron = "fills")
-
-
-
-# Chronically homeless map 
-
-p19 <- hud_gis |>
-  filter(ST_1 != "AK", ST_1 != "HI", ST_1 != "PR", ST_1 != "GU", ST_1 != "VI", ST_1 != "MP") |>
-  ggplot() +
-  geom_sf(aes(fill =`Overall Chronically Homeless`/`Overall Homeless`,
-              text = paste(coc_name,
-                           '<br>Homeless people that are chronically homeless: ', round(`Overall Chronically Homeless`/`Overall Homeless`*100, digits = 3), "%"))) +
-  scale_fill_gradientn(colours = c("#f3f3f3", "orange2", "blue4"),
-                       name = "Share of Homeless<br>People Who Are<br>Chronically Homeless",
-                       labels = scales::percent_format()) +
-  labs(title = "Chronic Homelessness - CoC View (2024)")
-
-ggplotly(p19, tooltip = "text") |>
-  style(hoveron = "fills")  
 
 
 
